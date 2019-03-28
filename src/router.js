@@ -44,6 +44,11 @@ export default new Router({
       path: '/account',
       name: 'account',
       component: () => import('./views/Account.vue')
+    },
+    {
+      path: '/feedback',
+      name: 'feedback',
+      component: () => import('./views/Feedback.vue')
     }
   ]
 })
