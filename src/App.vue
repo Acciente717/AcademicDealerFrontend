@@ -2,10 +2,20 @@
   <div id="app">
     <el-container>
       <el-header>
-        <div id="nav">
-          <router-link to="/">Home</router-link>|
-          <router-link to="/about">About</router-link>
-        </div>
+        <el-menu default-active="1" class="el-menu-demo" mode="horizontal" :router="true">
+          <el-menu-item index="/">AcademicDealer</el-menu-item>
+          <el-menu-item index="/timeline">推荐</el-menu-item>
+          <el-menu-item index="/lab">实验室</el-menu-item>
+          <el-menu-item index="/seminar">研讨会</el-menu-item>
+          <el-menu-item index="/project">项目</el-menu-item>
+          <el-menu-item index="/about">关于</el-menu-item>
+          <el-menu-item>
+            <el-input placeholder="搜索">
+              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            </el-input>
+          </el-menu-item>
+          <el-menu-item index="/account">我的账户</el-menu-item>
+        </el-menu>
       </el-header>
       <el-main>
         <router-view/>
@@ -19,19 +29,6 @@
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
 }
 </style>
