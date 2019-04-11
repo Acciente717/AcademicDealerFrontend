@@ -2,7 +2,7 @@
   <div id="app">
     <el-container>
       <el-header>
-        <el-menu default-active="1" class="el-menu-demo" mode="horizontal" :router="true">
+        <el-menu :default-active="activeLink" class="el-menu-demo" mode="horizontal" :router="true">
           <el-menu-item index="/">AcademicDealer</el-menu-item>
           <el-menu-item index="/timeline">推荐</el-menu-item>
           <el-menu-item index="/lab">实验室</el-menu-item>
@@ -54,3 +54,22 @@ el-footer {
   text-align: center;
 }
 </style>
+
+<script>
+export default {
+  data () {
+    return {
+      activeLink: '1'
+    }
+  },
+  mounted () {
+    this.activeLink = this.$route.path
+  },
+  watch: {
+    $route (newVal, oldVal) {
+      console.log('now I watched')
+      this.activeLink = newVal.path
+    }
+  }
+}
+</script>
