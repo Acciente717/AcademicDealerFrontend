@@ -67,7 +67,6 @@ export default {
   },
   watch: {
     $route (newVal, oldVal) {
-      console.log('now I watched')
       this.activeLink = newVal.path
     }
   }
