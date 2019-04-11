@@ -3,15 +3,44 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>这是一条实验室信息</span>
-        <el-button style="float: right; padding: 3px 0" type="text">详细信息</el-button>
+        <el-button style="float: right; padding: 3px 0" type="text" v-on:click="getContent">详细信息</el-button>
       </div>
       <div v-for="o in 4" :key="o" class="text item">{{'List item ' + o }}</div>
+      <div v-if="loading">Now loading</div>
+      <div class="text"> {{ description }}</div>
     </el-card>
   </div>
 </template>
 
 <script>
-export default {}
+import axios from 'axios'
+export default {
+  data () {
+    return {
+      loading: false,
+      errored: false,
+      description: 'no description'
+    }
+  },
+  methods: {
+    getContent: function () {
+      this.loading = true
+      axios
+        .get(`${'https://cors-anywhere.herokuapp.com/'}http://39.107.225.173:8001/lab`)
+        .then(res => {
+          console.log(res)
+          this.description = res.data.data.description
+        })
+        .catch(error => {
+          console.log(error)
+          this.errored = true
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    }
+  }
+}
 </script>
 
 <style scoped>
