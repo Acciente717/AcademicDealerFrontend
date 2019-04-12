@@ -2,13 +2,13 @@
   <div class="SingleLabPage">
     <h1>
       {{labName}}
-      <el-button type="text">编辑页面</el-button>
+      <el-button type="text" @click="editPage">编辑页面</el-button>
     </h1>
 
     <el-container>
       <el-aside width="200px">
         <h3>Supervisors</h3>
-        <div v-for="prof in labSupervisors" :key="prof">
+        <div v-for="prof in labSupervisors" :key="prof.name">
           <img :src="prof.photoUrl" width="190px">
           {{prof.name}}, {{prof.title}}
           email: {{prof.email}}
@@ -53,6 +53,12 @@ export default {
     $route (to, from) {
       // react to route changes...
       this.labId = this.$route.params.labId
+    }
+  },
+  methods: {
+    editPage () {
+      // TODO: authentication
+      this.$router.push({ name: 'labinfoedit', params: { labId: this.labId } })
     }
   }
 }

@@ -1,5 +1,6 @@
 import './registerServiceWorker'
 import 'element-ui/lib/theme-chalk/index.css'
+import 'v-markdown-editor/dist/index.css'
 
 import ElementUI from 'element-ui'
 import Vue from 'vue'

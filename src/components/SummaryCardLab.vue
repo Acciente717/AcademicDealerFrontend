@@ -17,8 +17,7 @@ export default {
   }),
   methods: {
     goToInfoPage () {
-      let labId = this.labId
-      this.$router.push({ name: 'labinfo', params: { labId } })
+      this.$router.push({ name: 'labinfo', params: { labId: this.labId } })
     }
   }
 }

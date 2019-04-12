@@ -27,7 +27,16 @@ export default {
     photoUrl: '',
     watching: [],
     watchedBy: []
-  })
+  }),
+  mount: () => {
+    this.accountId = this.$route.params.labId
+  },
+  watch: {
+    $route (to, from) {
+      // react to route changes...
+      this.accountId = this.$route.params.labId
+    }
+  }
 }
 </script>
 
