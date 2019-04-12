@@ -31,7 +31,7 @@ export default new Router({
       component: () => import('./views/Project.vue')
     },
     {
-      path: '/account',
+      path: '/account/:accountId',
       name: 'account',
       component: () => import('./views/Account.vue')
     },
