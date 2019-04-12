@@ -49,6 +49,11 @@ export default new Router({
       path: '/register',
       name: 'register',
       component: () => import('./views/Register.vue')
+    },
+    {
+      path: '/labinfo/:labId',
+      name: 'labinfo',
+      component: () => import('./views/SingleLabPage.vue')
     }
   ]
 })
