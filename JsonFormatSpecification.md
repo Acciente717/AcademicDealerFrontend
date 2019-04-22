@@ -5,33 +5,56 @@
 ### Request
 ```json
 {
-    "username": "admin",
-    "password": "123456789",
+  "response_type": "account_login", 
+  "username": "admin",
+  "password": "12345678",
 }
 ```
 
 ### Response
+
+#### Success
+
 ```json
 {
-    "username": "admin",
-    "ok": true,
+  "response_type": "account_login", 
+  "username": "admin",
+  "ok": true,
+}
+```
+
+#### Failure
+
+```json
+{
+  "response_type": "account_login",
+  "username": "admin",
+  "ok": false,
+  "message": "Password Incorrect",
 }
 ```
 
 ## JSON for Account Register
+
+### Request
+
 ```json
 {
-    "username": "admin",
+  "request_type": "account_register",
+  "username": "admin",
+  "password": "12345678",
+  "mail": "abcd@pku.edu.cn",
 }
 ```
+### Response
 
 ## JSON for Lab Information
 
 ### Request for Lab Information
 ```json
 {
-    "message": "lab",
-    "labId": 123,
+  "message": "lab",
+  "labId": 123,
 }
 ```
 
@@ -53,8 +76,7 @@
         "name": "Albert Einstein",
         "title": "Professor",
         "email": "einstein@404.org",
-        "photoUrl":
-          "https://upload.wikimedia.org/wikipedia/commons/3/3e/Einstein_1921_by_F_Schmutzer_-_restoration.jpg"
+        "photoUrl":   "https://upload.wikimedia.org/wikipedia/commons/3/3e/Einstein_1921_by_F_Schmutzer_-_restoration.jpg"
       }
     ],
     "infoString":
@@ -64,7 +86,7 @@
 
 ### Request Editing Lab Information
 ```
-```json
+​```json
 {
     "labId": 0,
     "labName": "Unified Theory and Artifical Intelligence Lab",
