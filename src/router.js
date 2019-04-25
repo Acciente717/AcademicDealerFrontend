@@ -31,7 +31,7 @@ export default new Router({
       component: () => import('./views/Project.vue')
     },
     {
-      path: '/account',
+      path: '/account/:accountId',
       name: 'account',
       component: () => import('./views/Account.vue')
     },
@@ -49,6 +49,16 @@ export default new Router({
       path: '/register',
       name: 'register',
       component: () => import('./views/Register.vue')
+    },
+    {
+      path: '/labinfo/:labId',
+      name: 'labinfo',
+      component: () => import('./views/SingleLabPage.vue')
+    },
+    {
+      path: '/labinfoedit/:labId',
+      name: 'labinfoedit',
+      component: () => import('./views/SingleLabEditPage.vue')
     }
   ]
 })
