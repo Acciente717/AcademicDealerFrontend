@@ -48,66 +48,76 @@
 ```
 ### Response
 
-## JSON for Lab Information
-
-### Request for Lab Information
 ```json
 {
-  "message": "lab",
+  "response_type": "account_register",
+  "username": "admin",
+  "ok": true,
+}
+```
+
+## JSON for Lab Information
+
+### Request Lab Information
+```json
+{
+  "request_type": "lab",
   "labId": 123,
 }
 ```
 
 ### Server Response 
+
 ```json
 {
-    "labId": 0,
-    "labName": "Unified Theory and Artifical Intelligence Lab",
-    "labOwner": "admin",
-    "labSupervisors": [
+    "response_type": "lab",
+    "lab_id": 0,
+    "lab_name": "Unified Theory and Artifical Intelligence Lab",
+    "lab_owner": "admin",
+    "lab_supervisors": [
       {
         "name": "Alan Turing",
         "title": "Professor",
         "email": "turing@404.org",
-        "photoUrl":
+        "photo_url":
           "https://upload.wikimedia.org/wikipedia/commons/a/a1/Alan_Turing_Aged_16.jpg"
       },
       {
         "name": "Albert Einstein",
         "title": "Professor",
         "email": "einstein@404.org",
-        "photoUrl":   "https://upload.wikimedia.org/wikipedia/commons/3/3e/Einstein_1921_by_F_Schmutzer_-_restoration.jpg"
+        "photo_url":   "https://upload.wikimedia.org/wikipedia/commons/3/3e/Einstein_1921_by_F_Schmutzer_-_restoration.jpg"
       }
     ],
-    "infoString":
+    "info_string":
       "## About this Lab\n Unified Theory and Artifical Intelligence Lab is a lab that focuses on developing a unified theory for both the universe and human intelligence. \n## For Perspective Students\nWe are looking for perspective students who have passed away and will be in heaven since 2020. Applicants should meet the following requirements:\n1. Expertise in theortical physics, computational theory and algorithm design. \n2. Solid mathematical background and programming skills. \n3. Contiguous enthusiasm in research.\n"
 }
 ```
 
 ### Request Editing Lab Information
-```
+
 ​```json
 {
-    "labId": 0,
-    "labName": "Unified Theory and Artifical Intelligence Lab",
-    "labOwner": "admin",
-    "labSupervisors": [
-      {
-        "name": "Alan Turing",
-        "title": "Professor",
-        "email": "turing@404.org",
-        "photoUrl":
+  "request_type": "lab_edit,
+  "lab_id": 0,
+  "lab_name": "Unified Theory and Artifical Intelligence Lab",
+  "lab_owner": "admin",
+  "lab_supervisors": [
+    {
+      "name": "Alan Turing",
+      "title": "Professor",
+      "email": "turing@404.org",
+      "photo_url":
           "https://upload.wikimedia.org/wikipedia/commons/a/a1/Alan_Turing_Aged_16.jpg"
-      },
-      {
-        "name": "Albert Einstein",
-        "title": "Professor",
-        "email": "einstein@404.org",
-        "photoUrl":
-          "https://upload.wikimedia.org/wikipedia/commons/3/3e/Einstein_1921_by_F_Schmutzer_-_restoration.jpg"
+    },
+    {
+      "name": "Albert Einstein",
+      "title": "Professor",
+      "email": "einstein@404.org",
+      "photo_url": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Einstein_1921_by_F_Schmutzer_-_restoration.jpg"
       }
     ],
-    "infoString":
+    "info_string":
       "## About this Lab\n Unified Theory and Artifical Intelligence Lab is a lab that focuses on developing a unified theory for both the universe and human intelligence. \n## For Perspective Students\nWe are looking for perspective students who have passed away and will be in heaven since 2020. Applicants should meet the following requirements:\n1. Expertise in theortical physics, computational theory and algorithm design. \n2. Solid mathematical background and programming skills. \n3. Contiguous enthusiasm in research.\n"
 }
 ```
