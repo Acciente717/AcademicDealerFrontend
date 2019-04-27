@@ -3,7 +3,7 @@ Usage:
 
 On unix-like system:
 
-    $ pip install falcon falcon-cors
+    $ pip install falcon falcon-cors gunicorn
     $ gunicorn -b 127.0.0.1:8001 testserver:api
 
 On Windows:
