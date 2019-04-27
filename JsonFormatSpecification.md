@@ -3,9 +3,10 @@
 ## JSON for Acount Login
 
 ### Request
+
 ```json
 {
-  "response_type": "account_login", 
+  "response_type": "account_login",
   "username": "admin",
   "password": "12345678",
 }
@@ -46,6 +47,7 @@
   "mail": "abcd@pku.edu.cn",
 }
 ```
+
 ### Response
 
 ```json
@@ -59,6 +61,7 @@
 ## JSON for Lab Information
 
 ### Request Lab Information
+
 ```json
 {
   "request_type": "lab",

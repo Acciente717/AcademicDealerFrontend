@@ -6,6 +6,7 @@
         <el-button style="float: right; padding: 3px 0" type="text" @click="goToInfoPage">详细信息</el-button>
       </div>
       <div v-for="o in 4" :key="o" class="text item">{{'List item ' + o }}</div>
+      <el-button text="text" @click="getContent">加载信息</el-button>
       <div v-if="loading">Now loading</div>
       <div class="text"> {{ description }}</div>
     </el-card>
@@ -28,7 +29,7 @@ export default {
     getContent: function () {
       this.loading = true
       axios
-        .get(`${'https://cors-anywhere.herokuapp.com/'}http://39.107.225.173:8001/lab`)
+        .get('http://localhost:8001/lab/')
         .then(res => {
           console.log(res)
           this.description = res.data.data.description
