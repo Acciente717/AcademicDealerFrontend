@@ -99,9 +99,9 @@
 
 ### Request Editing Lab Information
 
-​```json
+```json
 {
-  "request_type": "lab_edit,
+  "request_type": "lab_edit",
   "lab_id": 0,
   "lab_name": "Unified Theory and Artifical Intelligence Lab",
   "lab_owner": "admin",
