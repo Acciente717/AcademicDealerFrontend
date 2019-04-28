@@ -20,7 +20,7 @@
 
 ```haskell
 data = {
-  dir = String ( "request" | "responce" ),
+  dir = String ( "request" | "response" ),
   type = Encode content,
   content = Object ( account
                    | lab
@@ -71,10 +71,10 @@ recover_password = {
 view = { } -- request to view a given account's view
 ```
 
-#### Responce
+#### Response
 
 ```haskell
-when data.dir == "responce"
+when data.dir == "response"
 prefix data.content.account.data
 
 login = {
@@ -100,7 +100,13 @@ recover_password = {
                   )
 }
 
-view = { bio }
+view = {
+  status = Number ( 0 -- success
+                  | 1 -- no such user
+                  | 2 -- other failure
+                  ),
+  bio
+}
 ```
 
 #### Common definitions
@@ -163,17 +169,23 @@ edit = {
 view = { }
 ```
 
-#### Responce
+#### Response
 
 ```haskell
-when data.dir == "responce"
+when data.dir == "response"
 prefix data.content.lab.data
 
 create = { status }
 
 edit = { status }
 
-view = { lab_info }
+view = {
+  status = Number ( 0 -- success
+                  | 1 -- no such lab
+                  | 2 -- other failure
+                  ),
+  lab_info
+}
 
 status = Number ( 0 -- success
                 | 1 -- invalid account
@@ -258,17 +270,23 @@ join = { user_email }
 drop = { user_email }
 ```
 
-#### Responce
+#### Response
 
 ```haskell
-when data.dir == "responce"
+when data.dir == "response"
 prefix data.content.project.data
 
 create = { status }
 
 edit = { status }
 
-view = { project_info }
+view = {
+  status = Number ( 0 -- success
+                  | 1 -- no such project
+                  | 2 -- other failure
+                  ),
+  project_info
+}
 
 join = {
   status = Number ( 0 -- success
@@ -343,18 +361,24 @@ join = { user_email }
 drop = { user_email }
 ```
 
-#### Responce
+#### Response
 
 
 ```haskell
-when data.dir == "responce"
+when data.dir == "response"
 prefix data.content.seminar.data
 
 create = { status }
 
 edit = { status }
 
-view = { seminar_info }
+view = {
+  status = Number ( 0 -- success
+                  | 1 -- no such seminar
+                  | 2 -- other failure
+                  ),
+  seminar_info
+}
 
 join = {
   status = Number ( 0 -- success
@@ -425,10 +449,10 @@ edit = {
 view = { }
 ```
 
-#### Responce
+#### Response
 
 ```haskell
-when data.dir == "responce"
+when data.dir == "response"
 prefix data.content.comment.data
 
 create = { status }
@@ -436,6 +460,10 @@ create = { status }
 edit = { status }
 
 view = {
+  status = Number ( 0 -- success
+                  | 1 -- no such comment
+                  | 2 -- other failure
+                  ),
   user_email,
   content = String -- markdown format
 }
