@@ -120,7 +120,6 @@ bio = {
   real_name = String,
   nick_name = String,
   pic_url = String,         -- url format
-  privacy_setting = String, -- privacy setting format
   school = String,
   department = String,
   type = String ( "Teacher"
