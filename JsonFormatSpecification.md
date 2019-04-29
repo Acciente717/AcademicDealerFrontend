@@ -174,6 +174,7 @@ bio = {
                 | "other"
                 ),
   enrollment_year = Number, -- year format
+  -- when registering, the following four fields need to be empty
   labs = [ lab_id = Number ], -- if the lab is on site
   projects = [ project_id = Number ],
   seminars = [ seminar_id = Number ],
