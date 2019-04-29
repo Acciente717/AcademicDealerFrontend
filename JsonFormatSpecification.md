@@ -438,6 +438,13 @@ prefix data.content.comment.data
 
 create = {
   user_email,
+  target = Number ( 0 -- lab
+                  | 1 -- project
+                  | 2 -- seminar
+                  | 3 -- comment
+                  | 4 -- other
+                  ),
+  target_id = Number,
   content = String  -- markdown format
 }
 
@@ -465,6 +472,7 @@ view = {
                   | 2 -- other failure
                   ),
   user_email,
+  sub_comments = [ comment_id = Number ],
   content = String -- markdown format
 }
 
