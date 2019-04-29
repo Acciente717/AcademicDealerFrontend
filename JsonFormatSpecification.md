@@ -21,6 +21,7 @@
 ```haskell
 data = {
   dir = String ( "request" | "response" ),
+  signature,
   type = Encode content,
   content = Object ( account
                    | lab
@@ -32,17 +33,32 @@ data = {
 }
 ```
 
+User signature
+
+```haskell
+prefix *
+
+signature = {
+  is_user = Boolean,     -- false means a guest
+                         -- the following fields are valid if is_user == true
+  user_email = String,   -- email format
+  password_hash = String -- hash value format
+}
+```
+
 ### Account
 
 ```haskell
 prefix data.content
 
 account = {
-  user_email = String          -- email format
   action = Encode data
   data = Object ( login
                 | register
-                | recover_password
+                | validate
+                | reset_password
+                | edit
+                | delete
                 | view
                 )
 }
@@ -54,19 +70,23 @@ account = {
 when data.dir == "request"
 prefix data.content.account.data
 
-login = {
-  password_hash
-}
+login = { }
 
-register = {
-  password_hash,
-  bio
-}
+-- data.signature.is_user == true in registering
+register = { bio }
 
-recover_password = {
+validate = {
+  issue_new = Boolean,
   validation = String -- validation format
-  -- empty means to send a recover email or resend another.
+             -- empty: when issue_new == true, that is to send or resend an email
+             -- non-empty: actual validation string
 }
+
+reset_password = { }
+
+edit = { bio }
+
+delete = { }
 
 view = { } -- request to view a given account's view
 ```
@@ -92,11 +112,36 @@ register = {
                   )
 }
 
-recover_password = {
+validate = {
   status = Number ( 0 -- success
                   | 1 -- wrong validation
-                  | 2 -- email not registered
-                  | 3 -- other failure
+                  | 2 -- other failure
+                  )
+}
+
+reset_password = {
+  status = Number ( 0 -- success
+                  | 1 -- no such account
+                  | 2 -- other failure
+                  )
+}
+
+reset_password = {
+  status = Number ( 0 -- success
+                  | 1 -- no such account
+                  | 2 -- other failure
+                  )
+}
+
+edit = {
+  status = Number ( 0 -- success
+                  | 1 -- failure
+                  )
+}
+
+delete = {
+  status = Number ( 0 -- success
+                  | 1 -- failure
                   )
 }
 
@@ -145,7 +190,7 @@ prefix data.content
 lab = {
   id = Number,  -- when creating, id == -1
   action = Encode data,
-  data = Object ( create | edit | view )
+  data = Object ( create | edit | delete | view )
 }
 ```
 
@@ -155,17 +200,14 @@ lab = {
 when data.dir == "request"
 prefix data.content.lab.data
 
-create = {
-  user_email,
-  lab_info
-}
+create = { lab_info }
 
-edit = {
-  user_email,
-  lab_info
-}
+edit = { lab_info }
+
+delete = { }
 
 view = { }
+  
 ```
 
 #### Response
@@ -177,6 +219,8 @@ prefix data.content.lab.data
 create = { status }
 
 edit = { status }
+
+delete = { status }
 
 view = {
   status = Number ( 0 -- success
@@ -242,7 +286,7 @@ prefix data.content
 project = {
   id = Number,  -- when creating, id == -1
   action = Encode data,
-  data = Object ( create | edit | view | join | drop )
+  data = Object ( create | edit | delete | view | join | drop )
 }
 ```
 
@@ -252,21 +296,17 @@ project = {
 when data.dir == "request"
 prefix data.content.project.data
 
-create = {
-  user_email,
-  project_info
-}
+create = { project_info }
 
-edit = {
-  user_email,
-  project_info
-}
+edit = { project_info }
+
+delete = { }
 
 view = { }
 
-join = { user_email }
+join = { }
 
-drop = { user_email }
+drop = { }
 ```
 
 #### Response
@@ -278,6 +318,8 @@ prefix data.content.project.data
 create = { status }
 
 edit = { status }
+
+delete = { status }
 
 view = {
   status = Number ( 0 -- success
@@ -333,7 +375,7 @@ prefix data.content
 seminar = {
   id = Number,  -- when creating, id == -1
   action = Encode data,
-  data = Object ( create | edit | view | join | drop )
+  data = Object ( create | edit | delete | view | join | drop )
 }
 ```
 
@@ -343,21 +385,17 @@ seminar = {
 when data.dir == "request"
 prefix data.content.seminar.data
 
-create = {
-  user_email,
-  seminar_info
-}
+create = { seminar_info }
 
-edit = {
-  user_email,
-  seminar_info
-}
+edit = { seminar_info }
+
+delete = { }
 
 view = { }
 
-join = { user_email }
+join = { }
 
-drop = { user_email }
+drop = { }
 ```
 
 #### Response
@@ -370,6 +408,8 @@ prefix data.content.seminar.data
 create = { status }
 
 edit = { status }
+
+delete = { status }
 
 view = {
   status = Number ( 0 -- success
@@ -425,7 +465,7 @@ prefix data.content
 comment = {
   id = Number,  -- when creating, id == -1
   action = Encode data,
-  data = Object ( create | edit | view )
+  data = Object ( create | edit | delete | view )
 }
 ```
 
@@ -436,7 +476,6 @@ when data.dir == "request"
 prefix data.content.comment.data
 
 create = {
-  user_email,
   target = Number ( 0 -- lab
                   | 1 -- project
                   | 2 -- seminar
@@ -448,9 +487,10 @@ create = {
 }
 
 edit = {
-  user_email,
   content = String  -- markdown format
 }
+
+delete = { }
 
 view = { }
 ```
@@ -465,12 +505,14 @@ create = { status }
 
 edit = { status }
 
+delete = { status }
+
 view = {
   status = Number ( 0 -- success
                   | 1 -- no such comment
                   | 2 -- other failure
                   ),
-  user_email,
+  user_email = String, -- email format
   sub_comments = [ comment_id = Number ],
   content = String -- markdown format
 }
