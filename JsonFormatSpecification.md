@@ -88,7 +88,9 @@ edit = { bio }
 
 delete = { }
 
-view = { } -- request to view a given account's view
+view = { 
+  user_email = String
+} -- request to view a given account's view
 ```
 
 #### Response
@@ -150,6 +152,7 @@ view = {
                   | 1 -- no such user
                   | 2 -- other failure
                   ),
+  user_email = String,
   bio
 }
 ```
