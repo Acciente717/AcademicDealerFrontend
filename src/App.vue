@@ -8,18 +8,8 @@
           <el-menu-item index="/lab">实验室</el-menu-item>
           <el-menu-item index="/seminar">研讨会</el-menu-item>
           <el-menu-item index="/project">项目</el-menu-item>
-          <el-menu-item>
-            <el-input placeholder="搜索">
-              <i slot="prefix" class="el-input__icon el-icon-search"></i>
-            </el-input>
-          </el-menu-item>
-          <el-submenu index="/account">
-            <template slot="title">我的账户</template>
-            <el-menu-item index="/account">主页</el-menu-item>
-            <el-menu-item index="/account/notifications">通知</el-menu-item>
-            <el-menu-item index="/account/settings">设置</el-menu-item>
-            <el-menu-item index="/account/logout">登出</el-menu-item>
-          </el-submenu>
+          <el-menu-item index="/search">搜索</el-menu-item>
+          <el-menu-item index="/account">我的账户</el-menu-item>
         </el-menu>
       </el-header>
       <el-main>
