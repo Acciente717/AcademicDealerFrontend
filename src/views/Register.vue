@@ -1,18 +1,21 @@
 <template>
   <div class="register">
     <h1>注册</h1>
-    <el-form ref="form" :model="form" label-width="80px">
-      <el-form-item label="用户名">
+    <el-form ref="form" :model="form" :rules="rules" label-width="80px" status-icon>
+      <el-form-item label="用户名" prop="name">
         <el-input v-model="form.name"></el-input>
       </el-form-item>
-      <el-form-item label="密码">
-        <el-input v-model="form.password"></el-input>
+      <el-form-item label="密码" prop="password">
+        <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="确认密码">
-        <el-input v-model="form.confirmPassword"></el-input>
+      <el-form-item label="确认密码" prop="confirmPassword">
+        <el-input type="password" v-model="form.confirmPassword" auto-complete="off"></el-input>
       </el-form-item>
-      <el-form-item label="邮箱">
-        <el-input v-model="form.mail"></el-input>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model="form.email"></el-input>
+      </el-form-item>
+      <el-form-item label="自我介绍" prop="bio">
+        <el-input v-model="form.bio" type="textarea" :autosize="{ minRows: 2, maxRows: 10}"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">注册</el-button>
@@ -22,17 +25,144 @@
 </template>
 
 <script>
+// import axios from 'axios'
+import bcrypt from 'bcryptjs'
+
 export default {
-  data: () => ({
-    form: {
-      name: '',
-      password: '',
-      confirmPassword: '',
-      mail: ''
+  data () {
+    // Validate whether the two passwords are the same
+    let validatePassword = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'))
+      } else {
+        if (this.form.confirmPassword !== '') {
+          this.$refs.form.validateField('confirmPassword')
+        }
+        callback()
+      }
     }
-  }),
+    let validatePassword2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'))
+      } else if (value !== this.form.password) {
+        callback(new Error('两次输入密码不一致!'))
+      } else {
+        callback()
+      }
+    }
+    return {
+      form: {
+        name: '',
+        password: '',
+        confirmPassword: '',
+        email: '',
+        bio: ''
+      },
+      rules: {
+        name: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'change' },
+          {
+            min: 8,
+            max: 30,
+            message: '长度在 8 到 30 个字符',
+            trigger: 'change'
+          },
+          {
+            validator: validatePassword,
+            trigger: 'change'
+          }
+        ],
+        confirmPassword: [
+          { required: true, message: '请再次输入密码', trigger: 'change' },
+          {
+            min: 8,
+            max: 30,
+            message: '长度在 8 到 30 个字符',
+            trigger: 'change'
+          },
+          {
+            validator: validatePassword2,
+            trigger: 'change'
+          }
+        ],
+        email: [
+          { required: true, message: '请输入邮箱', trigger: 'blur' },
+          {
+            validator: (rule, value, callback) => {
+              // Validate whether value is an valid email
+              let re = /\S+@\S+\.\S+/
+              let isValid = re.test(String(value).toLowerCase())
+              if (!isValid) {
+                callback(new Error('邮箱地址必须合法'))
+              } else {
+                callback()
+              }
+            },
+            trigger: 'blur'
+          }
+        ],
+        bio: [
+          {
+            min: 0,
+            max: 500,
+            message: '长度在 0 到 500 个字符',
+            trigger: 'blur'
+          }
+        ]
+      }
+    }
+  },
   methods: {
-    onSubmit () {}
+    onSubmit () {
+      // validate form first
+      this.$refs['form'].validate(valid => {
+        if (valid) {
+          // alert("submit!");
+          // calculate password hash
+          let saltRounds = 10
+          let hash = bcrypt.hashSync(this.form.password, saltRounds)
+          this.sendRequest(hash)
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    sendRequest (passwordHash) {
+      let request = {
+        dir: 'request',
+        signature: {
+          is_user: true, // is true when registering
+          user_email: this.form.email,
+          password_hash: passwordHash
+        },
+        type: 'account',
+        content: {
+          action: 'register',
+          data: {
+            bio: this.form.bio
+          }
+        }
+      }
+
+      console.log(request)
+
+      // Post request to server and parse response
+      /*
+      axios
+        .post(this.$store.state.serverUrl + "/account/register", request)
+        .then(response => {
+          print(response);
+          if (this.$store.state.loggedIn) {
+            this.$store.commit('logout')
+          }
+          this.$store.commit('login', payload)
+        }); */
+    }
   }
 }
 </script>

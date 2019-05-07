@@ -1,11 +1,11 @@
 <template>
   <div class="login">
     <h1>登录到Academic Dealer</h1>
-    <el-form ref="form" :model="form" label-width="80px">
-      <el-form-item label="用户名">
-        <el-input v-model="form.name"></el-input>
+    <el-form ref="form" :model="form" :rules="rules" label-width="80px" status-icon>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model="form.email"></el-input>
       </el-form-item>
-      <el-form-item label="密码">
+      <el-form-item label="密码" prop="password">
         <el-input v-model="form.password"></el-input>
       </el-form-item>
       <el-form-item>
@@ -16,15 +16,42 @@
 </template>
 
 <script>
+
+import bcrypt from 'bcryptjs'
+
 export default {
   data: () => ({
     form: {
-      name: '',
+      email: '',
       password: ''
+    },
+    rules: {
+      email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
+      password: [{ required: true, message: '请输入密码', trigger: 'change' }]
     }
   }),
   methods: {
-    onSubmit () {}
+    onSubmit () {
+      let saltRounds = 10
+      let hash = bcrypt.hashSync(this.form.password, saltRounds)
+      let request = {
+        dir: 'request',
+        signature: {
+          is_user: true, // is true when registering
+          user_email: this.form.email,
+          password_hash: hash
+        },
+        type: 'account',
+        content: {
+          action: 'login',
+          data: {}
+        }
+      }
+
+      console.log(request)
+
+      // TODO: send request using axios and process response
+    }
   }
 }
 </script>
