@@ -52,3 +52,21 @@ npm run lint
 ### Customize configuration
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+### Use local API server to test
+
+On unix-like system:
+
+```bash
+$ cd tests
+$ pip install falcon falcon-cors gunicorn
+$ ./serve.sh
+```
+
+On Windows:
+
+```cmd
+$ cd tests
+$ pip install falcon falcon-cors waitress
+$ serve.bat
+```
