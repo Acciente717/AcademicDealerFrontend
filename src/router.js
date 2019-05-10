@@ -59,6 +59,11 @@ export default new Router({
       path: '/labinfoedit/:labId',
       name: 'labinfoedit',
       component: () => import('./views/SingleLabEditPage.vue')
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: () => import('./views/Search.vue')
     }
   ]
 })

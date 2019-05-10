@@ -52,7 +52,7 @@
 </template>
 
 <script>
-// import axios from 'axios'
+import axios from 'axios'
 import bcrypt from 'bcryptjs'
 import markdownEditor from 'vue-simplemde/src/markdown-editor'
 
@@ -187,7 +187,7 @@ export default {
           user_email: this.form.email,
           password_hash: passwordHash
         },
-        type: 'account',
+        content_type: 'account',
         content: {
           action: 'register',
           data: {
@@ -199,16 +199,18 @@ export default {
       console.log(request)
 
       // Post request to server and parse response
-      /*
       axios
-        .post(this.$store.state.serverUrl + "/account/register", request)
+        .post(this.$store.state.serverUrl + '/users/register/', request)
         .then(response => {
-          print(response);
+          print(response)
           if (this.$store.state.loggedIn) {
             this.$store.commit('logout')
           }
-          this.$store.commit('login', payload)
-        }); */
+          this.$store.commit('login', {
+            userEmail: this.form.email,
+            passwordHash: passwordHash
+          })
+        })
     }
   }
 }

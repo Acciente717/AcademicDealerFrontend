@@ -22,19 +22,28 @@
 <script>
 export default {
   data: () => ({
-    accountId: 0,
+    accountId: '',
+    isOwner: false,
     accountName: 'admin',
     photoUrl: '',
     watching: [],
     watchedBy: []
   }),
   mount: () => {
-    this.accountId = this.$route.params.labId
+    this.handleAccountIdChange()
   },
   watch: {
     $route (to, from) {
       // react to route changes...
-      this.accountId = this.$route.params.labId
+      this.handleAccountIdChange()
+    }
+  },
+  methods: {
+    handleAccountIdChange () {
+      this.accountId = this.$route.params.accountId
+      if (this.accountId === this.$store.state.emailHash) {
+        this.isOwner = true
+      }
     }
   }
 }
