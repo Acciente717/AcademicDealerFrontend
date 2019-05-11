@@ -53,8 +53,8 @@
 
 <script>
 import axios from 'axios'
-import bcrypt from 'bcryptjs'
 import markdownEditor from 'vue-simplemde/src/markdown-editor'
+import sha256 from 'js-sha256'
 
 export default {
   components: {
@@ -174,11 +174,14 @@ export default {
   methods: {
     checkLoginState () {
       if (this.$store.state.loggedIn) {
-        this.$alert('您已经登录，点击确认返回', '提示', {
-          confirmButtonText: 'OK',
-          callback: action => {
-            this.$router.go(-1)
-          }
+        this.$confirm('您已经是登录状态，是否退出当前账户？', '提示', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'info'
+        }).then(() => {
+          this.$store.commit('logout')
+        }).catch(() => {
+          this.$router.go(-1)
         })
       }
     },
@@ -192,13 +195,10 @@ export default {
       // validate form first
       this.$refs['form'].validate(valid => {
         if (valid) {
-          // alert("submit!");
-          // calculate password hash
-          let saltRounds = 10
-          this.passwordHash = bcrypt.hashSync(this.form.password, saltRounds)
+          this.passwordHash = sha256.sha256(this.form.password)
           this.sendRequest()
         } else {
-          console.log('error submit!!')
+          this.$alert('存在不合法输入，请重新检查您填入的内容！')
           return false
         }
       })
@@ -231,7 +231,6 @@ export default {
         }
       }
 
-      console.log('Sending Register Repuest...')
       console.log(request)
 
       // Post request to server and parse response
@@ -246,7 +245,6 @@ export default {
         })
     },
     handleResponse (response) {
-      console.log('Received Register Response')
       console.log(response)
 
       const REGISTER_SUCCESS = 0
@@ -267,18 +265,18 @@ export default {
             userEmail: this.form.email,
             passwordHash: this.passwordHash
           })
-          this.$message('你已成功登陆')
+          this.$message('注册成功！')
           this.$router.push('timeline/')
           break
         case EMAIL_REGISTERED:
-          this.$message('你的邮箱/昵称已经被注册，请更换邮箱/昵称！')
+          this.$message.warning('你的邮箱/昵称已经被注册，请更换邮箱/昵称！')
           break
         case INVALID_FIELD:
         case CORRUPTED_JSON:
         case MISSING_JSON_FIELD:
         case BAD_REQ_OR_RESP:
         case OTHER_FAILURE:
-          this.$message(
+          this.$message.error(
             '应用内部错误：错误码：' + statusCode + '，请联系开发人员'
           )
       }
