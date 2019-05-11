@@ -1,22 +1,31 @@
 <template>
   <div class="login">
-    <h1>登录到Academic Dealer</h1>
-    <el-form ref="form" :model="form" :rules="rules" label-width="80px" status-icon>
-      <el-form-item label="邮箱" prop="email">
-        <el-input v-model="form.email"></el-input>
-      </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">登录</el-button>
-      </el-form-item>
-    </el-form>
+    <el-card class="login-card">
+      <h1 style="text-align:center;">登录到Academic Dealer</h1>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px" status-icon>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="form.email"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">登录</el-button>
+          <el-button @click="goToRegisterPage">注册新账户</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
   </div>
 </template>
 
-<script>
+<style scoped>
+.login-card {
+  max-width: 500px;
+  margin: auto;
+}
+</style>
 
+<script>
 import sha256 from 'js-sha256'
 import axios from 'axios'
 
@@ -36,7 +45,7 @@ export default {
     this.checkLoginState()
   },
   watch: {
-    '$route' (to, from) {
+    $route (to, from) {
       // react to route changes...
       this.checkLoginState()
     }
@@ -48,11 +57,13 @@ export default {
           confirmButtonText: '确认',
           cancelButtonText: '取消',
           type: 'info'
-        }).then(() => {
-          this.$store.commit('logout')
-        }).catch(() => {
-          this.$router.go(-1)
         })
+          .then(() => {
+            this.$store.commit('logout')
+          })
+          .catch(() => {
+            this.$router.go(-1)
+          })
       }
     },
     onSubmit () {
@@ -106,12 +117,14 @@ export default {
           this.$message.warning('邮箱未被注册！')
           break
         default:
-          this.$message.error('应用内部错误：错误码：' + statusCode + '，请联系开发人员')
+          this.$message.error(
+            '应用内部错误：错误码：' + statusCode + '，请联系开发人员'
+          )
       }
+    },
+    goToRegisterPage () {
+      this.$router.push('/register')
     }
   }
 }
 </script>
-
-<style scoped>
-</style>

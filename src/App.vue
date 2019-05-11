@@ -23,7 +23,7 @@
         <router-link to="/about">关于我们</router-link>
         <el-divider direction="vertical"></el-divider>
         <router-link to="/feedback">问题反馈</router-link>
-        <el-divider direction="vertical"></el-divider>GitHub Page:
+        <el-divider direction="vertical"></el-divider>GitHub Repository:
         <a
           target="_blank"
           rel="noopener noreferrer"
@@ -92,6 +92,9 @@ export default {
   methods: {
     goToLoginPage () {
       this.$router.push('/login')
+    },
+    goToRegisterPage () {
+      this.$router.push('/register')
     }
   }
 }
