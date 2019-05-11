@@ -2,11 +2,16 @@
   <div id="app">
     <el-container>
       <el-header>
-        <el-menu :default-active="activeLink" class="el-menu-demo" mode="horizontal" :router="true">
+        <el-menu :default-active="activeLink" mode="horizontal" :router="true">
           <el-menu-item index="/">AcademicDealer</el-menu-item>
           <el-menu-item index="/timeline">推荐</el-menu-item>
           <el-menu-item index="/search">搜索</el-menu-item>
-          <el-menu-item index="/account/0">我的账户</el-menu-item>
+          <el-menu-item :index="userHomePage">
+            <div v-if="loggedIn">我的账户</div>
+            <div v-if="!loggedIn">
+              <el-button @click="goToLoginPage">登录</el-button>
+            </div>
+          </el-menu-item>
         </el-menu>
       </el-header>
       <el-main>
@@ -32,7 +37,7 @@
 
 <style>
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: sans-serif, "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
@@ -55,6 +60,23 @@ export default {
   watch: {
     $route (newVal, oldVal) {
       this.activeLink = newVal.path
+    }
+  },
+  computed: {
+    loggedIn () {
+      return this.$store.state.loggedIn
+    },
+    userHomePage () {
+      if (this.loggedIn) {
+        return '/account/' + this.$store.state.emailHash
+      } else {
+        return '/login'
+      }
+    }
+  },
+  methods: {
+    goToLoginPage () {
+      this.$router.push('/login')
     }
   }
 }
