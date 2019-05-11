@@ -1,7 +1,7 @@
 <template>
   <div class="register">
     <el-card class="box-card" shadow="never">
-      <h1 style="aligned: center;">用户注册</h1>
+      <h1>用户注册</h1>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px" status-icon>
         <el-divider content-position="center">以下为必填项</el-divider>
         <el-form-item label="用户名" prop="nickName">
@@ -45,13 +45,22 @@
         <el-form-item label="自我介绍" prop="profile">
           <markdown-editor v-model="form.profile" :configs="markdownConfigs" ref="markdownEditor"></markdown-editor>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onSubmit">注册</el-button>
-        </el-form-item>
       </el-form>
+      <el-button class="register-btn" type="primary" @click="onSubmit">确认注册</el-button>
     </el-card>
   </div>
 </template>
+
+<style scoped>
+@import "~simplemde/dist/simplemde.min.css";
+
+.register-btn {
+  position: fixed;
+  bottom: 5%;
+  right: 5%;
+  z-index: 999;
+}
+</style>
 
 <script>
 import axios from 'axios'
@@ -204,7 +213,7 @@ export default {
           this.passwordHash = sha256.sha256(this.form.password)
           this.sendRequest()
         } else {
-          this.$alert('存在不合法输入，请重新检查您填入的内容！')
+          this.$message.error('有些内容不符合要求，请重新检查您填入的内容！')
           return false
         }
       })
@@ -290,7 +299,3 @@ export default {
   }
 }
 </script>
-
-<style>
-@import "~simplemde/dist/simplemde.min.css";
-</style>

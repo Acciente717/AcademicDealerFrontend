@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <el-container>
-      <el-header>
+      <el-header class="stick-top">
         <el-menu :default-active="activeLink" mode="horizontal" :router="true">
           <el-menu-item index="/">AcademicDealer</el-menu-item>
           <el-menu-item index="/timeline">推荐</el-menu-item>
@@ -14,7 +14,7 @@
           </el-menu-item>
         </el-menu>
       </el-header>
-      <el-main>
+      <el-main class="main-container">
         <router-view/>
       </el-main>
       <el-footer>
@@ -35,15 +35,23 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 #app {
-  font-family: sans-serif, "Avenir", Helvetica, Arial, sans-serif;
+  font-family: "Avenir", sans-serif, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
-el-footer {
-  text-align: center;
+.stick-top {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: white;
+  z-index: 999;
+}
+.main-container {
+  display: block;
+  margin: 45px 1% 0 1%;
 }
 </style>
 
