@@ -2,8 +2,8 @@
   <div class="register">
     <h1>注册</h1>
     <el-form ref="form" :model="form" :rules="rules" label-width="80px" status-icon>
-      <el-form-item label="用户名" prop="name">
-        <el-input v-model="form.name"></el-input>
+      <el-form-item label="昵称" prop="nickName">
+        <el-input v-model="form.nickName"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password">
         <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
@@ -14,23 +14,20 @@
       <el-form-item label="邮箱" prop="email">
         <el-input v-model="form.email"></el-input>
       </el-form-item>
-      <el-form-item label="真实姓名" prop="real_name">
-        <el-input v-model="form.bio.real_name"></el-input>
+      <el-form-item label="真实姓名" prop="realName">
+        <el-input v-model="form.realName"></el-input>
       </el-form-item>
-      <el-form-item label="昵称" prop="nick_name">
-        <el-input v-model="form.bio.nick_name"></el-input>
-      </el-form-item>
-      <el-form-item label="照片URL" prop="pic_url">
-        <el-input v-model="form.bio.pic_url"></el-input>
+      <el-form-item label="照片URL" prop="picUrl">
+        <el-input v-model="form.picUrl"></el-input>
       </el-form-item>
       <el-form-item label="学校" prop="school">
-        <el-input v-model="form.bio.school"></el-input>
+        <el-input v-model="form.school"></el-input>
       </el-form-item>
       <el-form-item label="院系" prop="department">
-        <el-input v-model="form.bio.department"></el-input>
+        <el-input v-model="form.department"></el-input>
       </el-form-item>
       <el-form-item label="类型" prop="type">
-        <el-select v-model="form.bio.type" placeholder="请选择">
+        <el-select v-model="form.type" placeholder="请选择">
           <el-option label="教师" value="Teacher"></el-option>
           <el-option label="本科生" value="Undergraduate"></el-option>
           <el-option label="硕士" value="Master"></el-option>
@@ -38,11 +35,14 @@
           <el-option label="其他" value="other"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="入学年份" prop="year">
-        <el-input v-model="form.bio.year"></el-input>
+      <el-form-item label="职称" prop="title">
+        <el-input v-model="form.title"></el-input>
+      </el-form-item>
+      <el-form-item label="入学日期" prop="year">
+        <el-date-picker v-model="form.enrollmentDate" type="date" placeholder="选择日期"></el-date-picker>
       </el-form-item>
       <el-form-item label="自我介绍" prop="profile">
-        <markdown-editor v-model="form.bio.profile" :configs="markdownConfigs" ref="markdownEditor"></markdown-editor>
+        <markdown-editor v-model="form.profile" :configs="markdownConfigs" ref="markdownEditor"></markdown-editor>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">注册</el-button>
@@ -83,28 +83,26 @@ export default {
     }
     return {
       form: {
-        name: '',
+        nickName: '',
         password: '',
         confirmPassword: '',
         email: '',
-        bio: {
-          real_name: '',
-          nick_name: '',
-          pic_url: '',
-          school: '',
-          department: '',
-          type: 'other',
-          enrollment_year: 0,
-          labs: [],
-          projects: [],
-          seminars: [],
-          comments: [],
-          profile: ''
-        }
+        realName: '',
+        picUrl: '',
+        school: '',
+        department: '',
+        type: 'other',
+        enrollmentDate: new Date(),
+        title: '',
+        labs: [],
+        projects: [],
+        seminars: [],
+        comments: [],
+        profile: ''
       },
       rules: {
-        name: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
+        nickName: [
+          { required: true, message: '请输入昵称', trigger: 'blur' },
           { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
         ],
         password: [
@@ -149,7 +147,7 @@ export default {
             trigger: 'blur'
           }
         ],
-        bio: [
+        profile: [
           {
             min: 0,
             max: 500,
@@ -160,10 +158,36 @@ export default {
       },
       markdownConfigs: {
         spellChecker: false
-      }
+      },
+      passwordHash: ''
+    }
+  },
+  mounted: function () {
+    this.checkLoginState()
+  },
+  watch: {
+    '$route' (to, from) {
+      // react to route changes...
+      this.checkLoginState()
     }
   },
   methods: {
+    checkLoginState () {
+      if (this.$store.state.loggedIn) {
+        this.$alert('您已经登录，点击确认返回', '提示', {
+          confirmButtonText: 'OK',
+          callback: action => {
+            this.$router.go(-1)
+          }
+        })
+      }
+    },
+    dateToYMD (date) {
+      var d = date.getDate()
+      var m = date.getMonth() + 1 // Month from 0 to 11
+      var y = date.getFullYear()
+      return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d)
+    },
     onSubmit () {
       // validate form first
       this.$refs['form'].validate(valid => {
@@ -171,48 +195,96 @@ export default {
           // alert("submit!");
           // calculate password hash
           let saltRounds = 10
-          let hash = bcrypt.hashSync(this.form.password, saltRounds)
-          this.sendRequest(hash)
+          this.passwordHash = bcrypt.hashSync(this.form.password, saltRounds)
+          this.sendRequest()
         } else {
           console.log('error submit!!')
           return false
         }
       })
     },
-    sendRequest (passwordHash) {
+    sendRequest () {
       let request = {
         dir: 'request',
         signature: {
           is_user: true, // is true when registering
           user_email: this.form.email,
-          password_hash: passwordHash
+          password_hash: this.passwordHash
         },
         content_type: 'account',
         content: {
           action: 'register',
           data: {
-            bio: this.form.bio
+            real_name: this.form.realName,
+            nick_name: this.form.nickName,
+            pic_url: this.form.picUrl,
+            school: this.form.school,
+            department: this.form.department,
+            title: this.form.title,
+            enrollment_date: this.dateToYMD(this.form.enrollmentDate),
+            labs: {},
+            projects: {},
+            seminars: {},
+            comments: {},
+            profile: this.form.profile
           }
         }
       }
 
+      console.log('Sending Register Repuest...')
       console.log(request)
 
       // Post request to server and parse response
       axios
-        .post(this.$store.state.serverUrl + '/users/register/', request)
+        .post(this.$store.state.serverUrl + '/users/register/', request, {
+          headers: {
+            'Content-Type': 'text/plain'
+          }
+        })
         .then(response => {
-          print(response)
+          this.handleResponse(response)
+        })
+    },
+    handleResponse (response) {
+      console.log('Received Register Response')
+      console.log(response)
+
+      const REGISTER_SUCCESS = 0
+      const EMAIL_REGISTERED = 1
+      const INVALID_FIELD = 2
+      const CORRUPTED_JSON = 3
+      const MISSING_JSON_FIELD = 4
+      const BAD_REQ_OR_RESP = 5
+      const OTHER_FAILURE = 6
+      let statusCode = response.data.content.data.status
+
+      switch (statusCode) {
+        case REGISTER_SUCCESS:
           if (this.$store.state.loggedIn) {
             this.$store.commit('logout')
           }
           this.$store.commit('login', {
             userEmail: this.form.email,
-            passwordHash: passwordHash
+            passwordHash: this.passwordHash
           })
-        })
+          this.$message('你已成功登陆')
+          this.$router.push('timeline/')
+          break
+        case EMAIL_REGISTERED:
+          this.$message('你的邮箱/昵称已经被注册，请更换邮箱/昵称！')
+          break
+        case INVALID_FIELD:
+        case CORRUPTED_JSON:
+        case MISSING_JSON_FIELD:
+        case BAD_REQ_OR_RESP:
+        case OTHER_FAILURE:
+          this.$message(
+            '应用内部错误：错误码：' + statusCode + '，请联系开发人员'
+          )
+      }
     }
   }
+
 }
 </script>
 
