@@ -26,6 +26,5 @@ Vue.use(VueShowdown, {
 new Vue({
   router,
   store,
-  render: h => h(App),
-  http: { root: '/root', headers: { Authorization: 'Basic YXBpOnBhc3N3b3Jk' } }
+  render: h => h(App)
 }).$mount('#app')
