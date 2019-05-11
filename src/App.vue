@@ -2,24 +2,16 @@
   <div id="app">
     <el-container>
       <el-header>
-        <el-menu :default-active="activeLink" class="el-menu-demo" mode="horizontal" :router="true">
+        <el-menu :default-active="activeLink" mode="horizontal" :router="true">
           <el-menu-item index="/">AcademicDealer</el-menu-item>
           <el-menu-item index="/timeline">推荐</el-menu-item>
-          <el-menu-item index="/lab">实验室</el-menu-item>
-          <el-menu-item index="/seminar">研讨会</el-menu-item>
-          <el-menu-item index="/project">项目</el-menu-item>
-          <el-menu-item>
-            <el-input placeholder="搜索">
-              <i slot="prefix" class="el-input__icon el-icon-search"></i>
-            </el-input>
+          <el-menu-item index="/search">搜索</el-menu-item>
+          <el-menu-item :index="userHomePage">
+            <div v-if="loggedIn">我的账户</div>
+            <div v-if="!loggedIn">
+              <el-button @click="goToLoginPage">登录</el-button>
+            </div>
           </el-menu-item>
-          <el-submenu index="/account">
-            <template slot="title">我的账户</template>
-            <el-menu-item index="/account">主页</el-menu-item>
-            <el-menu-item index="/account/notifications">通知</el-menu-item>
-            <el-menu-item index="/account/settings">设置</el-menu-item>
-            <el-menu-item index="/account/logout">登出</el-menu-item>
-          </el-submenu>
         </el-menu>
       </el-header>
       <el-main>
@@ -45,7 +37,7 @@
 
 <style>
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: sans-serif, "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
@@ -68,6 +60,23 @@ export default {
   watch: {
     $route (newVal, oldVal) {
       this.activeLink = newVal.path
+    }
+  },
+  computed: {
+    loggedIn () {
+      return this.$store.state.loggedIn
+    },
+    userHomePage () {
+      if (this.loggedIn) {
+        return '/account/' + this.$store.state.emailHash
+      } else {
+        return '/login'
+      }
+    }
+  },
+  methods: {
+    goToLoginPage () {
+      this.$router.push('/login')
     }
   }
 }
