@@ -6,10 +6,12 @@
           <el-menu-item index="/">AcademicDealer</el-menu-item>
           <el-menu-item index="/timeline">推荐</el-menu-item>
           <el-menu-item index="/search">搜索</el-menu-item>
-          <el-menu-item :index="userHomePage">
+          <el-menu-item :index="userHomePage" style="float:right;">
             <div v-if="loggedIn">我的账户</div>
             <div v-if="!loggedIn">
-              <el-button @click="goToLoginPage">登录</el-button>
+              <el-button @click="goToLoginPage" type="text">登录</el-button>
+              <el-divider direction="vertical"></el-divider>
+              <el-button @click="goToRegisterPage" type="text">注册</el-button>
             </div>
           </el-menu-item>
         </el-menu>
@@ -18,8 +20,10 @@
         <router-view/>
       </el-main>
       <el-footer>
-        <router-link to="/about">关于我们</router-link>&nbsp;|
-        <router-link to="/feedback">问题反馈</router-link>&nbsp;| GitHub Page:
+        <router-link to="/about">关于我们</router-link>
+        <el-divider direction="vertical"></el-divider>
+        <router-link to="/feedback">问题反馈</router-link>
+        <el-divider direction="vertical"></el-divider>GitHub Page:
         <a
           target="_blank"
           rel="noopener noreferrer"
@@ -52,6 +56,9 @@
 .main-container {
   display: block;
   margin: 45px 1% 0 1%;
+}
+.el-footer {
+  margin: auto;
 }
 </style>
 
