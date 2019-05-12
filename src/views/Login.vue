@@ -99,7 +99,6 @@ export default {
       let statusCode = response.data.content.data.status
       switch (statusCode) {
         case SUCCESS:
-          this.$message('登录成功！')
           this.$store.commit('login', {
             userEmail: this.form.email,
             passwordHash: this.passwordHash
