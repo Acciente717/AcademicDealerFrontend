@@ -8,12 +8,18 @@
           <el-menu-item index="/search">搜索</el-menu-item>
           <el-menu-item v-if="loggedIn" index="/post">发布新信息</el-menu-item>
           <el-menu-item v-if="!loggedIn" index="login" style="float:right;">
-              <el-button @click="goToLoginPage" type="text">登录</el-button>
-              <el-divider direction="vertical"></el-divider>
-              <el-button @click="goToRegisterPage" type="text">注册</el-button>
+            <el-button @click="goToLoginPage" type="text">登录</el-button>
+            <el-divider direction="vertical"></el-divider>
+            <el-button @click="goToRegisterPage" type="text">注册</el-button>
           </el-menu-item>
           <el-submenu v-if="loggedIn" index="userHomePage" style="float:right;">
-            <template slot="title">我的账户</template>
+            <template slot="title">
+              <el-image class="user-icon" :src="userPicUrl" fit="cover">
+                <div slot="error" class="image-slot">
+                  <i class="el-icon-picture-outline"></i>
+                </div>
+              </el-image>
+            </template>
             <el-menu-item index="userHomePage">账户主页</el-menu-item>
             <el-menu-item index="logout">登出</el-menu-item>
           </el-submenu>
@@ -63,22 +69,25 @@
 .el-footer {
   margin: auto;
 }
+.user-icon {
+  width: 30px;
+  height: 30px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+}
 </style>
 
 <script>
+import { requestUserInfo } from '@/utils.js'
+
 export default {
   data () {
     return {
-      activeLink: '1'
+      activeLink: '1',
+      userPicUrl: ''
     }
   },
   mounted () {
     this.activeLink = this.$route.path
-  },
-  watch: {
-    $route (newVal, oldVal) {
-      this.activeLink = newVal.path
-    }
   },
   computed: {
     loggedIn () {
@@ -86,6 +95,21 @@ export default {
     },
     userHomePage () {
       return '/user/' + this.$store.state.userEmail
+    }
+  },
+  watch: {
+    $route (newVal, oldVal) {
+      this.activeLink = newVal.path
+    },
+    loggedIn () {
+      if (this.loggedIn) {
+        requestUserInfo(this.$store.state.userEmail, response => {
+          this.userPicUrl = response.bio.pic_url
+          if (this.userPicUrl === '') {
+            this.userPicUrl = require('@/assets/img/default-user-icon.png')
+          }
+        })
+      }
     }
   },
   methods: {

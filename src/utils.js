@@ -8,14 +8,15 @@ import store from '@/store.js'
 /*
  * Given user email and options, return an object containing user information
  * Example:
- *   getUserInfo('hehao@163.com', {
- *     requestLab: true,
- *     requestSeminar: true,
- *     requestProject: true,
- *     requestComment: true,
- *   }, (result)=>{
+ *   getUserInfo('hehao@163.com',  (result)=>{
  *     // process response, see below for format
- *   })
+ *     },
+ *     {
+ *       requestLab: true,
+ *       requestSeminar: true,
+ *       requestProject: true,
+ *       requestComment: true,
+ *     })
  * Returns: {
  *   status_code: 0,
  *   bio: {
@@ -34,7 +35,7 @@ import store from '@/store.js'
  *   }
  * }
  */
-function requestUserInfo (userEmail, options, callback) {
+function requestUserInfo (userEmail, callback, options) {
   let requestLab = false
   let requestSeminar = false
   let requestProject = false
@@ -84,4 +85,29 @@ function requestUserInfo (userEmail, options, callback) {
     })
 }
 
-export { requestUserInfo }
+function requestProjectInfo (projectId, callback) {
+  let request = {
+    dir: 'request',
+    signature: {
+      is_user: true,
+      user_email: store.state.userEmail,
+      password_hash: store.state.passwordHash
+    },
+    content_type: 'project',
+    content: {
+      action: 'view',
+      data: {
+        id: projectId
+      }
+    }
+  }
+  axios.post(store.state.serverUrl + '/project/view/', request, {
+    headers: {
+      'Content-Type': 'text/plain'
+    }
+  }).then(response => {
+    callback(response.data.content.data)
+  })
+}
+
+export { requestUserInfo, requestProjectInfo }
