@@ -20,15 +20,15 @@ export default new Router({
       name: 'timeline',
       component: () => import('./views/Timeline.vue')
     },
-    { path: '/lab', name: 'lab', component: () => import('./views/Lab.vue') }, {
-      path: '/seminar',
-      name: 'seminar',
-      component: () => import('./views/Seminar.vue')
+    {
+      path: '/search',
+      name: 'search',
+      component: () => import('./views/Search.vue')
     },
     {
-      path: '/project',
-      name: 'project',
-      component: () => import('./views/Project.vue')
+      path: '/post',
+      name: 'post',
+      component: () => import('./views/Post.vue')
     },
     {
       path: '/user/:email',
@@ -51,19 +51,14 @@ export default new Router({
       component: () => import('./views/Register.vue')
     },
     {
-      path: '/labinfo/:labId',
-      name: 'labinfo',
-      component: () => import('./views/SingleLabPage.vue')
+      path: '/lab/:labId',
+      name: 'lab',
+      component: () => import('./views/Lab.vue')
     },
     {
-      path: '/labinfoedit/:labId',
-      name: 'labinfoedit',
-      component: () => import('./views/SingleLabEditPage.vue')
-    },
-    {
-      path: '/search',
-      name: 'search',
-      component: () => import('./views/Search.vue')
+      path: '/labedit/:labId',
+      name: 'labedit',
+      component: () => import('./views/LabEdit.vue')
     }
   ]
 })

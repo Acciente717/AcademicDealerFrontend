@@ -6,6 +6,7 @@
           <el-menu-item index="/">AcademicDealer</el-menu-item>
           <el-menu-item index="/timeline">推荐</el-menu-item>
           <el-menu-item index="/search">搜索</el-menu-item>
+          <el-menu-item index="/post">发布新信息</el-menu-item>
           <el-menu-item v-if="!loggedIn" index="login" style="float:right;">
               <el-button @click="goToLoginPage" type="text">登录</el-button>
               <el-divider direction="vertical"></el-divider>
