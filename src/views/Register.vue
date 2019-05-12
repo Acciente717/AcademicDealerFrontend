@@ -1,55 +1,66 @@
 <template>
   <div class="register">
-    <h1>注册</h1>
-    <el-form ref="form" :model="form" :rules="rules" label-width="80px" status-icon>
-      <el-form-item label="昵称" prop="nickName">
-        <el-input v-model="form.nickName"></el-input>
-      </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="确认密码" prop="confirmPassword">
-        <el-input type="password" v-model="form.confirmPassword" auto-complete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="邮箱" prop="email">
-        <el-input v-model="form.email"></el-input>
-      </el-form-item>
-      <el-form-item label="真实姓名" prop="realName">
-        <el-input v-model="form.realName"></el-input>
-      </el-form-item>
-      <el-form-item label="照片URL" prop="picUrl">
-        <el-input v-model="form.picUrl"></el-input>
-      </el-form-item>
-      <el-form-item label="学校" prop="school">
-        <el-input v-model="form.school"></el-input>
-      </el-form-item>
-      <el-form-item label="院系" prop="department">
-        <el-input v-model="form.department"></el-input>
-      </el-form-item>
-      <el-form-item label="类型" prop="type">
-        <el-select v-model="form.type" placeholder="请选择">
-          <el-option label="教师" value="Teacher"></el-option>
-          <el-option label="本科生" value="Undergraduate"></el-option>
-          <el-option label="硕士" value="Master"></el-option>
-          <el-option label="博士" value="PhD"></el-option>
-          <el-option label="其他" value="other"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="职称" prop="title">
-        <el-input v-model="form.title"></el-input>
-      </el-form-item>
-      <el-form-item label="入学日期" prop="year">
-        <el-date-picker v-model="form.enrollmentDate" type="date" placeholder="选择日期"></el-date-picker>
-      </el-form-item>
-      <el-form-item label="自我介绍" prop="profile">
-        <markdown-editor v-model="form.profile" :configs="markdownConfigs" ref="markdownEditor"></markdown-editor>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">注册</el-button>
-      </el-form-item>
-    </el-form>
+    <el-card class="box-card" shadow="never">
+      <h1>用户注册</h1>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px" status-icon>
+        <el-divider content-position="center">以下为必填项</el-divider>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="form.email" placeholder="登录用邮箱，注册后不可更改"></el-input>
+        </el-form-item>
+        <el-form-item label="用户名" prop="nickName">
+          <el-input v-model="form.nickName" placeholder="2-20个字符，注册后不可更改"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input
+            type="password"
+            v-model="form.password"
+            autocomplete="off"
+            placeholder="8-30个字符"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码" prop="confirmPassword">
+          <el-input
+            type="password"
+            v-model="form.confirmPassword"
+            auto-complete="off"
+            placeholder="8-30个字符"
+          ></el-input>
+        </el-form-item>
+        <el-divider content-position="center">以下为选填项</el-divider>
+        <el-form-item label="真实姓名" prop="realName">
+          <el-input v-model="form.realName"></el-input>
+        </el-form-item>
+        <el-form-item label="头像URL" prop="picUrl">
+          <el-input v-model="form.picUrl" placeholder="本网站太菜了，不支持上传头像"></el-input>
+        </el-form-item>
+        <el-form-item label="学校" prop="school">
+          <el-input v-model="form.school"></el-input>
+        </el-form-item>
+        <el-form-item label="院系" prop="department">
+          <el-input v-model="form.department"></el-input>
+        </el-form-item>
+        <el-form-item label="学位/职称" prop="title">
+          <el-input v-model="form.title" placeholder="本科/硕士/博士/副教授/教授等"></el-input>
+        </el-form-item>
+        <el-form-item label="个人简介" prop="profile">
+          <markdown-editor v-model="form.profile" :configs="markdownConfigs" ref="markdownEditor"></markdown-editor>
+        </el-form-item>
+      </el-form>
+      <el-button class="register-btn" type="primary" @click="onSubmit">确认注册</el-button>
+    </el-card>
   </div>
 </template>
+
+<style scoped>
+@import "~simplemde/dist/simplemde.min.css";
+
+.register-btn {
+  position: fixed;
+  bottom: 5%;
+  right: 5%;
+  z-index: 999;
+}
+</style>
 
 <script>
 import axios from 'axios'
@@ -102,7 +113,7 @@ export default {
       },
       rules: {
         nickName: [
-          { required: true, message: '请输入昵称', trigger: 'blur' },
+          { required: true, message: '请输入用户名', trigger: 'blur' },
           { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
         ],
         password: [
@@ -166,7 +177,7 @@ export default {
     this.checkLoginState()
   },
   watch: {
-    '$route' (to, from) {
+    $route (to, from) {
       // react to route changes...
       this.checkLoginState()
     }
@@ -178,18 +189,22 @@ export default {
           confirmButtonText: '确认',
           cancelButtonText: '取消',
           type: 'info'
-        }).then(() => {
-          this.$store.commit('logout')
-        }).catch(() => {
-          this.$router.go(-1)
         })
+          .then(() => {
+            this.$store.commit('logout')
+          })
+          .catch(() => {
+            this.$router.go(-1)
+          })
       }
     },
     dateToYMD (date) {
       var d = date.getDate()
       var m = date.getMonth() + 1 // Month from 0 to 11
       var y = date.getFullYear()
-      return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d)
+      return (
+        '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d)
+      )
     },
     onSubmit () {
       // validate form first
@@ -198,7 +213,7 @@ export default {
           this.passwordHash = sha256.sha256(this.form.password)
           this.sendRequest()
         } else {
-          this.$alert('存在不合法输入，请重新检查您填入的内容！')
+          this.$message.error('有些内容不符合要求，请重新检查您填入的内容！')
           return false
         }
       })
@@ -282,10 +297,5 @@ export default {
       }
     }
   }
-
 }
 </script>
-
-<style>
-@import "~simplemde/dist/simplemde.min.css";
-</style>

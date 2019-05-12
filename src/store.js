@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import bcrypt from 'bcryptjs'
+import sha256 from 'js-sha256'
 
 Vue.use(Vuex)
 
@@ -16,7 +16,7 @@ export default new Vuex.Store({
     login (state, payload) {
       state.loggedIn = true
       state.userEmail = payload.userEmail
-      state.emailHash = bcrypt.hashSync(payload.userEmail, 10)
+      state.emailHash = sha256.sha256(payload.userEmail)
       state.passwordHash = payload.passwordHash
     },
     logout (state) {
