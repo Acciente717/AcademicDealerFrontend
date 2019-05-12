@@ -82,11 +82,7 @@ export default {
       return this.$store.state.loggedIn
     },
     userHomePage () {
-      if (this.loggedIn) {
-        return '/user/' + this.$store.state.userEmail
-      } else {
-        return '/login'
-      }
+      return '/user/' + this.$store.state.userEmail
     }
   },
   methods: {
@@ -97,6 +93,12 @@ export default {
       this.$router.push('/register')
     },
     handleSelect (key, keyPath) {
+      if (key === 'userHomePage') {
+        if (this.loggedIn) {
+          this.$router.push(this.userHomePage)
+        }
+        return
+      }
       this.$router.push(key)
     }
   }
