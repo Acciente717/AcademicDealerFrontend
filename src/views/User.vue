@@ -130,16 +130,12 @@ export default {
   methods: {
     handleUserInfoChange () {
       console.log('requesting info from' + this.userEmail)
-      requestUserInfo(
-        this.userEmail,
-        {
-          requestLab: true,
-          requestSeminar: true,
-          requestProject: true,
-          requestComment: true
-        },
-        this.handleUserInfoResponse
-      )
+      requestUserInfo(this.userEmail, this.handleUserInfoResponse, {
+        requestLab: true,
+        requestSeminar: true,
+        requestProject: true,
+        requestComment: true
+      })
     },
     handleUserInfoResponse (response) {
       console.log(response)

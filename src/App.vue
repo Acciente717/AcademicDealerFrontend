@@ -14,11 +14,7 @@
           </el-menu-item>
           <el-submenu v-if="loggedIn" index="userHomePage" style="float:right;">
             <template slot="title">
-              <el-image
-                class="user-icon"
-                :src="require('@/assets/img/default-user-icon.png')"
-                fit="cover"
-              >
+              <el-image class="user-icon" :src="userPicUrl" fit="cover">
                 <div slot="error" class="image-slot">
                   <i class="el-icon-picture-outline"></i>
                 </div>
@@ -81,6 +77,8 @@
 </style>
 
 <script>
+import { requestUserInfo } from '@/utils.js'
+
 export default {
   data () {
     return {
@@ -91,17 +89,27 @@ export default {
   mounted () {
     this.activeLink = this.$route.path
   },
-  watch: {
-    $route (newVal, oldVal) {
-      this.activeLink = newVal.path
-    }
-  },
   computed: {
     loggedIn () {
       return this.$store.state.loggedIn
     },
     userHomePage () {
       return '/user/' + this.$store.state.userEmail
+    }
+  },
+  watch: {
+    $route (newVal, oldVal) {
+      this.activeLink = newVal.path
+    },
+    loggedIn () {
+      if (this.loggedIn) {
+        requestUserInfo(this.$store.state.userEmail, response => {
+          this.userPicUrl = response.bio.pic_url
+          if (this.userPicUrl === '') {
+            this.userPicUrl = require('@/assets/img/default-user-icon.png')
+          }
+        })
+      }
     }
   },
   methods: {
