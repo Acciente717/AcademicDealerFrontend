@@ -42,7 +42,7 @@
         <el-form-item label="学位/职称" prop="title">
           <el-input v-model="form.title" placeholder="本科/硕士/博士/副教授/教授等"></el-input>
         </el-form-item>
-        <el-form-item label="自我介绍" prop="profile">
+        <el-form-item label="个人简介" prop="profile">
           <markdown-editor v-model="form.profile" :configs="markdownConfigs" ref="markdownEditor"></markdown-editor>
         </el-form-item>
       </el-form>
