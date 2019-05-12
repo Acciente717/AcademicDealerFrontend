@@ -2,11 +2,11 @@
   <div class="login">
     <el-card class="login-card">
       <h1 style="text-align:center;">登录到Academic Dealer</h1>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px" status-icon>
-        <el-form-item label="邮箱" prop="email">
+      <el-form ref="form" :model="form" label-width="80px" status-icon>
+        <el-form-item label="邮箱">
           <el-input v-model="form.email"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="password">
+        <el-form-item label="密码">
           <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item>
@@ -35,11 +35,7 @@ export default {
       email: '',
       password: ''
     },
-    passwordHash: '',
-    rules: {
-      email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
-      password: [{ required: true, message: '请输入密码', trigger: 'change' }]
-    }
+    passwordHash: ''
   }),
   mounted: function () {
     this.checkLoginState()

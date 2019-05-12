@@ -2,11 +2,11 @@
   <div id="app">
     <el-container>
       <el-header class="stick-top">
-        <el-menu :default-active="activeLink" mode="horizontal" :router="true">
+        <el-menu :default-active="activeLink" mode="horizontal" @select="handleSelect">
           <el-menu-item index="/">AcademicDealer</el-menu-item>
           <el-menu-item index="/timeline">推荐</el-menu-item>
           <el-menu-item index="/search">搜索</el-menu-item>
-          <el-menu-item :index="userHomePage" style="float:right;">
+          <el-menu-item index="userHomePage" style="float:right;">
             <div v-if="loggedIn">我的账户</div>
             <div v-if="!loggedIn">
               <el-button @click="goToLoginPage" type="text">登录</el-button>
@@ -83,7 +83,7 @@ export default {
     },
     userHomePage () {
       if (this.loggedIn) {
-        return '/account/' + this.$store.state.emailHash
+        return '/user/' + this.$store.state.userEmail
       } else {
         return '/login'
       }
@@ -95,6 +95,9 @@ export default {
     },
     goToRegisterPage () {
       this.$router.push('/register')
+    },
+    handleSelect (key, keyPath) {
+      this.$router.push(key)
     }
   }
 }

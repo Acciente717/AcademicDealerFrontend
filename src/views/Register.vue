@@ -4,6 +4,9 @@
       <h1>用户注册</h1>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px" status-icon>
         <el-divider content-position="center">以下为必填项</el-divider>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="form.email" placeholder="登录用邮箱，注册后不可更改"></el-input>
+        </el-form-item>
         <el-form-item label="用户名" prop="nickName">
           <el-input v-model="form.nickName" placeholder="2-20个字符，注册后不可更改"></el-input>
         </el-form-item>
@@ -22,9 +25,6 @@
             auto-complete="off"
             placeholder="8-30个字符"
           ></el-input>
-        </el-form-item>
-        <el-form-item label="邮箱" prop="email">
-          <el-input v-model="form.email" placeholder="登录用邮箱，注册后不可更改"></el-input>
         </el-form-item>
         <el-divider content-position="center">以下为选填项</el-divider>
         <el-form-item label="真实姓名" prop="realName">
