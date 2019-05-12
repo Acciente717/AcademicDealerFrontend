@@ -6,14 +6,16 @@
           <el-menu-item index="/">AcademicDealer</el-menu-item>
           <el-menu-item index="/timeline">推荐</el-menu-item>
           <el-menu-item index="/search">搜索</el-menu-item>
-          <el-menu-item index="userHomePage" style="float:right;">
-            <div v-if="loggedIn">我的账户</div>
-            <div v-if="!loggedIn">
+          <el-menu-item v-if="!loggedIn" index="login" style="float:right;">
               <el-button @click="goToLoginPage" type="text">登录</el-button>
               <el-divider direction="vertical"></el-divider>
               <el-button @click="goToRegisterPage" type="text">注册</el-button>
-            </div>
           </el-menu-item>
+          <el-submenu v-if="loggedIn" index="userHomePage" style="float:right;">
+            <template slot="title">我的账户</template>
+            <el-menu-item index="userHomePage">账户主页</el-menu-item>
+            <el-menu-item index="logout">登出</el-menu-item>
+          </el-submenu>
         </el-menu>
       </el-header>
       <el-main class="main-container">
@@ -93,6 +95,14 @@ export default {
       this.$router.push('/register')
     },
     handleSelect (key, keyPath) {
+      if (key === 'login') {
+        return
+      }
+      if (key === 'logout') {
+        this.$store.commit('logout')
+        this.$router.push('/')
+        return
+      }
       if (key === 'userHomePage') {
         if (this.loggedIn) {
           this.$router.push(this.userHomePage)
