@@ -18,6 +18,25 @@
     <el-form-item label="主页" prop="frontPageUrl">
       <el-input v-model="labForm.frontPageUrl"></el-input>
     </el-form-item>
+    <el-form-item label="成员">
+      <el-form-item
+        v-for="(s, index, id) in labForm.supervisors"
+        :label="'成员' + index"
+        :label-width="'80px'"
+        :key="id"
+        :prop="'supervisors.' + index + '.value'">
+        <el-form-item label-width="80px" label='姓名'>
+          <el-input v-model="s.name"></el-input>
+        </el-form-item>
+        <el-form-item label-width="80px" label='学校'>
+          <el-input v-model="s.school"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click.prevent="deleteSupervisor(s)">删除</el-button>
+        </el-form-item>
+      </el-form-item>
+      <el-button @click="addSupervisor">添加</el-button>
+    </el-form-item>
     <el-form-item label="图片URL" prop="picUrl" placeholder="暂不支持自定义图片">
       <el-input v-model="labForm.picUrl"></el-input>
     </el-form-item>
@@ -31,7 +50,8 @@
       ></markdown-editor>
     </el-form-item>
     <el-form-item>
-      <el-button class="post-btn" type="primary" @click="onLabSubmit">确认提交</el-button>
+      <el-button type="primary" @click="onLabSubmit">确认提交</el-button>
+      <el-button @click="onLabReset">清空</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -104,19 +124,41 @@ export default {
     }
   }),
   methods: {
-    handleClick (e) {
-      console.log('tab clicked at ' + e.index)
+    addSupervisor () {
+      this.labForm.supervisors.push({
+        name: '',
+        school: ''
+      })
+    },
+    deleteSupervisor (s) {
+      let index = this.labForm.supervisors.indexOf(s)
+      if (index !== -1) {
+        this.labForm.supervisors.splice(index, 1)
+      }
     },
     onLabSubmit () {
       // validate
       this.$refs['labForm'].validate(valid => {
         if (valid) {
-          this.sendLabRequest()
+          this.$confirm('确定提交实验室信息？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'info'
+          }).then(() => { this.sendLabRequest() }).catch(() => { return false })
         } else {
           this.$message.error('有些内容不符合要求，请重新检查您填入的内容！')
           return false
         }
       })
+    },
+    onLabReset () {
+      this.$confirm('确定清空实验室信息？', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$refs['labForm'].resetFields()
+      }).catch(() => {})
     }
   }
 }
