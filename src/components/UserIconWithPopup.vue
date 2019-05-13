@@ -19,7 +19,6 @@
           <span>{{this.userInfo.department}}</span>
         </el-form-item>
       </el-form>
-
       <el-image slot="reference" class="user-icon" :src="userInfo.pic_url"></el-image>
     </el-popover>
   </div>
