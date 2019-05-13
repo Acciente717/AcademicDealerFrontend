@@ -2,10 +2,10 @@
   <div class="register">
     <el-card class="box-card" shadow="never">
       <h1>用户注册</h1>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px" status-icon>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px" status-icon @keyup.enter.native="onSubmit">
         <el-divider content-position="center">以下为必填项</el-divider>
         <el-form-item label="邮箱" prop="email">
-          <el-input v-model="form.email" placeholder="登录用邮箱，注册后不可更改"></el-input>
+          <el-input ref="autofocus" v-model="form.email" placeholder="登录用邮箱，注册后不可更改"></el-input>
         </el-form-item>
         <el-form-item label="用户名" prop="nickName">
           <el-input v-model="form.nickName" placeholder="2-20个字符，注册后不可更改"></el-input>
@@ -175,6 +175,7 @@ export default {
   },
   mounted: function () {
     this.checkLoginState()
+    this.$refs.autofocus.focus()
   },
   watch: {
     $route (to, from) {

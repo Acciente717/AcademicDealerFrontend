@@ -1,5 +1,6 @@
 <template>
-  <el-form ref="labForm" :model="labForm" :rules="labRules" label-width="120px" status-icon>
+  <el-form ref="labForm" :model="labForm" :rules="labRules" label-width="120px" status-icon
+    @keyup.enter.native="onLabSubmit">
     <el-form-item label="实验室名称" prop="name">
       <el-input v-model="labForm.name"></el-input>
     </el-form-item>

@@ -40,7 +40,7 @@
         <el-tab-pane label="TA发布的" name="posts"></el-tab-pane>
         <el-tab-pane label="正在关注" name="watching"></el-tab-pane>
         <el-tab-pane label="关注TA的" name="watched"></el-tab-pane>
-        <el-tab-pane v-if="isOwner" label="编辑个人资料" name="edit">
+        <el-tab-pane v-if="isOwner" label="编辑个人资料" name="edit" @keyup.enter.native="handleUserEdit">
           <el-form ref="form" :model="bio" label-width="80px" status-icon>
             <el-form-item label="真实姓名" prop="realName">
               <el-input v-model="bio.real_name"></el-input>

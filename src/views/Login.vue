@@ -2,9 +2,9 @@
   <div class="login">
     <el-card class="login-card">
       <h1 style="text-align:center;">登录到Academic Dealer</h1>
-      <el-form ref="form" :model="form" label-width="80px" status-icon>
+      <el-form ref="form" :model="form" label-width="80px" status-icon @keyup.enter.native="onSubmit">
         <el-form-item label="邮箱">
-          <el-input v-model="form.email"></el-input>
+          <el-input ref="autofocus" v-model="form.email"></el-input>
         </el-form-item>
         <el-form-item label="密码">
           <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
@@ -39,6 +39,7 @@ export default {
   }),
   mounted: function () {
     this.checkLoginState()
+    this.$refs.autofocus.focus()
   },
   watch: {
     $route (to, from) {
