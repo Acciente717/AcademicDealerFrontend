@@ -1,46 +1,91 @@
 <template>
   <div class="summary-card-project">
     <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <span>这是一条项目信息 ID: {{id}}</span>
-        <el-button style="float: right; padding: 3px 0" type="text">详细信息</el-button>
+      <div class="clearfix">
+        <el-container>
+          <el-aside style="height: 50px; width: 50px;">
+            <user-icon-with-popup :user="info.owner"/>
+          </el-aside>
+          <el-main>
+            <div class="card-title">
+              <strong>{{info.name}}</strong>
+              <el-button
+                class="more-info-button"
+                style="float: right; padding: 3px 0; margin: auto;"
+                type="text"
+                @click="goToProjectInfoPage"
+              >详细信息</el-button>
+            </div>
+            <div class="card-info">
+              {{info.member_total_need}}人
+              <el-divider direction="vertical"></el-divider>
+              <i class="el-icon-date"></i>
+              {{dateRange}}
+            </div>
+          </el-main>
+        </el-container>
       </div>
-      <div v-for="o in 4" :key="o" class="text item">{{'List item ' + o }}</div>
+      <el-divider class="card-divider"></el-divider>
+      <VueShowdown :markdown="info.description"/>
     </el-card>
   </div>
 </template>
 
+<style scoped>
+.summary-card-project {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.card-title {
+  font-size: larger;
+  margin: auto;
+}
+.el-divider {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.el-main {
+  padding: 0px;
+  margin-left: 10px;
+}
+.more-info-button {
+  position: relative;
+  right: 0;
+}
+.card-info {
+  font-size: small;
+}
+</style>
+
 <script>
-import { requestProjectInfo, requestUserInfo } from '@/utils.js'
+import UserIconWithPopup from '@/components/UserIconWithPopup.vue'
+import { requestProjectInfo, dateToYMD } from '@/utils.js'
 
 export default {
   props: ['id'],
+  components: {
+    UserIconWithPopup
+  },
   data: () => ({
     info: {
-      status: '0',
+      status: 0,
       id: 1,
-      name: 'project 16666',
-      owner: 2,
-      start_date: '2019-12-31 16:00:00+00:00',
-      end_date: '2029-12-31 16:00:00+00:00',
-      member_total_need: '3',
-      description: 'This is a stupid project.',
-      current_members: '[2]'
-    },
-    userInfo: {
-      nick_name: 'Idiot',
-      pic_url: '',
-      school: 'Paradize',
-      department: 'White House',
-      title: 'Other',
-      enrollment_date: '2000-01-01',
-      labs: [],
-      projects: [],
-      seminars: [],
-      comments: [],
-      profile: '#### Profile title\nProfile content\n'
+      name: '',
+      owner: '',
+      start_date: '',
+      end_date: '',
+      member_total_need: 3,
+      description: '',
+      current_members: ''
     }
   }),
+  computed: {
+    dateRange () {
+      let begin = new Date(this.info.start_date)
+      let end = new Date(this.info.end_date)
+      return dateToYMD(begin) + ' - ' + dateToYMD(end)
+    }
+  },
   mounted: function () {
     this.requestInfo()
   },
@@ -51,7 +96,7 @@ export default {
         switch (response.status) {
           case 0: // success
             this.info = response
-            requestUserInfo(this.info.owner, response => {})
+            this.ownerEmail = this.info.owner
             break
           default:
             this.$message.error(
@@ -61,10 +106,10 @@ export default {
             )
         }
       })
+    },
+    goToProjectInfoPage () {
+      this.$router.push('/project/' + this.id)
     }
   }
 }
 </script>
-
-<style scoped>
-</style>
