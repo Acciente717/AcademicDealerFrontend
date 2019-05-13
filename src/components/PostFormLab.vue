@@ -26,17 +26,42 @@
         :label-width="'80px'"
         :key="id"
         :prop="'supervisors.' + index + '.value'">
-        <el-form-item label-width="80px" label='姓名'>
+        <el-form-item label-width="120px" label='是否为用户'>
+          <el-radio v-model="s.isUser" :label="true">是</el-radio>
+          <el-radio v-model="s.isUser" :label="false">否</el-radio>
+        </el-form-item>
+        <el-form-item v-if="s.isUser" label-width="120px" label='账户邮箱'>
+          <el-input v-model="s.accountEmail"></el-input>
+        </el-form-item>
+        <el-form-item v-if="!s.isUser" label-width="120px" label='姓名'>
           <el-input v-model="s.name"></el-input>
         </el-form-item>
-        <el-form-item label-width="80px" label='学校'>
+        <el-form-item v-if="!s.isUser" label-width="120px" label='学校'>
           <el-input v-model="s.school"></el-input>
         </el-form-item>
-        <el-form-item>
-          <el-button @click.prevent="deleteSupervisor(s)">删除</el-button>
+        <el-form-item v-if="!s.isUser" label-width="120px" label='院系'>
+          <el-input v-model="s.department"></el-input>
+        </el-form-item>
+        <el-form-item v-if="!s.isUser" label-width="120px" label='学位/职称'>
+          <el-input v-model="s.title" placeholder="本科/硕士/博士/副教授/教授等"></el-input>
+        </el-form-item>
+        <el-form-item v-if="!s.isUser" label-width="120px" label='头像URL'>
+          <el-input v-model="s.picUrl" placeholder="暂不支持修改头像"></el-input>
+        </el-form-item>
+        <el-form-item v-if="!s.isUser" label-width="120px" label='联系邮箱'>
+          <el-input v-model="s.contactEmail"></el-input>
+        </el-form-item>
+        <el-form-item v-if="!s.isUser" label-width="120px" label='联系地址'>
+          <el-input v-model="s.address"></el-input>
+        </el-form-item>
+        <el-form-item v-if="!s.isUser" label-width="120px" label="简介" prop="profile">
+          <markdown-editor v-model="s.profile" :configs="markdownConfigs" ref="markdownEditor"></markdown-editor>
+        </el-form-item>
+        <el-form-item label-width="120px">
+          <el-button type="danger" @click.prevent="deleteSupervisor(s)">删除</el-button>
         </el-form-item>
       </el-form-item>
-      <el-button @click="addSupervisor">添加</el-button>
+      <el-button type="primary" @click="addSupervisor">添加</el-button>
     </el-form-item>
     <el-form-item label="图片URL" prop="picUrl" placeholder="暂不支持自定义图片">
       <el-input v-model="labForm.picUrl"></el-input>
@@ -62,7 +87,7 @@
 </style>
 
 <script>
-// import axios from 'axios'
+import axios from 'axios'
 import markdownEditor from 'vue-simplemde/src/markdown-editor'
 
 export default {
@@ -127,8 +152,16 @@ export default {
   methods: {
     addSupervisor () {
       this.labForm.supervisors.push({
+        isUser: true,
         name: '',
-        school: ''
+        school: '',
+        department: '',
+        title: '',
+        picUrl: '',
+        accountEmail: '',
+        contactEmail: '',
+        address: '',
+        profile: ''
       })
     },
     deleteSupervisor (s) {
@@ -160,6 +193,71 @@ export default {
       }).then(() => {
         this.$refs['labForm'].resetFields()
       }).catch(() => {})
+    },
+    sendLabRequest () {
+      if (!this.$store.state.loggedIn) {
+        this.$message.error('没有登录却尝试发布信息？！')
+        return
+      }
+      let request = {
+        dir: 'request',
+        signature: {
+          is_user: true,
+          user_email: this.$store.state.userEmail,
+          password_hash: this.$store.state.passwordHash
+        },
+        content_type: 'lab',
+        content: {
+          action: 'create',
+          data: {
+            id: -1,
+            name: this.labForm.name,
+            school: this.labForm.school,
+            department: this.labForm.department,
+            owner_email: '',
+            address: this.labForm.address,
+            phone: this.labForm.phone,
+            front_page_url: this.labForm.frontPageUrl,
+            pic_url: this.labForm.picUrl,
+            logo_url: this.labForm.logoUrl,
+            supervisors: this.labForm.supervisors.map((s) => ({
+              name: s.name,
+              school: s.school,
+              department: s.department,
+              title: s.title,
+              pic_url: s.picUrl,
+              is_user: s.isUser,
+              account_email: s.accountEmail,
+              contact_email: s.contactEmail,
+              address: s.address,
+              profile: s.profile
+            })),
+            comments: [],
+            description: this.labForm.description
+          }
+        }
+      }
+      console.log(this.labForm.supervisors)
+      console.log(request)
+      axios
+        .post(this.$store.state.serverUrl + '/labs/create/',
+          request, {
+            headers: {
+              'Content-Type': 'text/plain'
+            }
+          })
+        .then(response => {
+          this.handleLabResponce(response)
+        })
+    },
+    handleLabResponce (response) {
+      console.log(response)
+      let statusCode = response.data.content.data.status
+      if (statusCode !== 0) {
+        this.$message.error('创建实验室信息错误，错误码：' + statusCode + '，请联系开发人员')
+      } else {
+        this.$message.info('创建实验室信息成功！')
+      }
     }
   }
 }
