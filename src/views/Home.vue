@@ -1,15 +1,65 @@
 <template>
   <div class="home">
-    <h1 style="margin-bottom:0px;">Academic Dealer</h1>
-    <p>一款为北大学生量身打造的高端学术社交平台</p>
+    <h1 style="margin-bottom:0px; text-align:center; font-size: 300%; vspace:100px">Academic Dealer</h1>
+    <el-container style="height:150px; max-width:400px; margin:auto; margin-top:40px; vspace:20px">
+    <img src="../assets/img/FootPrint.png" height="120" />
+    <p style="font-size: 150%; font-family: Times, serif">
+      <i> Your Single Step Progresses Mankind </i>
+    </p>
+    </el-container>
     <el-row style="margin-top: 20px;">
       <el-col :span="8">
         <el-card class="info-card" shadow="hover">
-          <el-image src="@assets/img/curie.png"></el-image>
+          <span style="font-size: 150%; margin-top: 10px; margin-bottom: 10px; font-family: Times, serif">
+            <strong> Labs </strong>
+          </span>
+          <span style="font-size: 100%; margin-top: 10px; margin-bottom: 10px; font-family: Times, serif">
+            <br> Reach your <br> <strong> Labs </strong>&<strong> Groups </strong>&<strong>Professors</strong>.
+          </span>
+          <el-image :src="require('../assets/img/ENIAC.jpg')"></el-image>
+        <p style="font-family: Times, serif; text-align: justify">
+          <i>
+          AcademicDealer collects and presents up-to-data information on laborotaries, research groups and professors.
+          You can wander, comment and contribute freely.
+          </i>
+        </p>
         </el-card>
       </el-col>
-      <el-col :span="8"><el-card class="info-card" shadow="hover"></el-card></el-col>
-      <el-col :span="8"><el-card class="info-card" shadow="hover"></el-card></el-col>
+
+      <el-col :span="8">
+        <el-card class="info-card" shadow="hover">
+          <span style="font-size: 150%; margin-top: 10px; margin-bottom: 10px; font-family: Times, serif">
+            <strong> Seminars </strong>
+          </span>
+          <span style="font-size: 100%; margin-top: 10px; margin-bottom: 10px; font-family: Times, serif">
+            <br> Start or Join <br> <strong>Seminars</strong> or <strong>  Discussions </strong>.
+          </span>
+          <el-image :src="require('../assets/img/Solver.jpg')"></el-image>
+          <p style="font-family: Times, serif; text-align: justify">
+            <i>
+              AcademicDealer provides a platform for researchers to start their seminars.
+              Both joining and initiating a discussion are supported and highly encouraged.
+            </i>
+          </p>
+        </el-card>
+      </el-col>
+      <el-col :span="8">
+        <el-card class="info-card" shadow="hover">
+          <span style="font-size: 150%; margin-top: 10px; margin-bottom: 10px; font-family: Times, serif">
+            <strong> Projects </strong>
+          </span>
+          <span style="font-size: 100%; margin-top: 10px; margin-bottom: 10px; font-family: Times, serif">
+            <br> Look for <br> <strong>Partners</strong> of <strong>  Projects </strong>.
+          </span>
+          <el-image :src="require('../assets/img/DNA.jpg')"></el-image>
+          <p style="font-family: Times, serif; text-align: justify">
+            <i>
+              AcademicDealer offers exploring space to encounter your project collaborators.
+              Either proposing or finding a project leads to thriving cooperation.
+            </i>
+          </p>
+        </el-card>
+      </el-col>
     </el-row>
     <el-button type="primary" @click="goToRegisterPage">立即注册</el-button>
     <el-button @click="goToLoginPage">登录</el-button>
