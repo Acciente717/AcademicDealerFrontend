@@ -19,13 +19,12 @@
           <span>{{this.userInfo.department}}</span>
         </el-form-item>
       </el-form>
-
       <el-image slot="reference" class="user-icon" :src="userInfo.pic_url"></el-image>
     </el-popover>
   </div>
 </template>
 
-<style>
+<style scoped>
 .user-icon {
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
   margin-right: 2px;

@@ -80,6 +80,18 @@
   border-radius: 2px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 }
+.el-form-item--mini .el-form-item__label {
+  line-height: 1.4;
+  font-size: medium;
+}
+.el-form-item--mini .el-form-item__content {
+  line-height: 1.4;
+  font-size: medium;
+}
+.el-form-item {
+  font-family: "Avenir", sans-serif, Helvetica, Arial;
+  font-size: medium;
+}
 </style>
 
 <script>

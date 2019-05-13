@@ -5,11 +5,6 @@
 import axios from 'axios'
 import store from '@/store.js'
 
-function stringToArray (str) {
-  console.log(str.replace(/'/g, '"'))
-  return JSON.parse(str.replace(/'/g, '"'))
-}
-
 /*
  * Given user email and options, return an object containing user information
  * Example:
@@ -118,11 +113,6 @@ function requestProjectInfo (projectId, callback) {
     })
     .then(response => {
       if (response.data.content.data) {
-        if (response.data.content.data.status === 0) {
-          response.data.content.data.current_members = stringToArray(
-            response.data.content.data.current_members
-          )
-        }
         callback(response.data.content.data)
       } else {
         console.log('Error sending project info request: ', request)
