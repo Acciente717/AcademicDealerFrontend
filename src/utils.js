@@ -5,6 +5,11 @@
 import axios from 'axios'
 import store from '@/store.js'
 
+function stringToArray (str) {
+  console.log(str.replace(/'/g, '"'))
+  return JSON.parse(str.replace(/'/g, '"'))
+}
+
 /*
  * Given user email and options, return an object containing user information
  * Example:
@@ -17,7 +22,7 @@ import store from '@/store.js'
  *       requestProject: true,
  *       requestComment: true,
  *     })
- * Returns: {
+ * Returns: {ƒ
  *   status_code: 0,
  *   bio: {
  *     real_name: 'Donald Trump',
@@ -81,7 +86,11 @@ function requestUserInfo (userEmail, callback, options) {
       }
     })
     .then(response => {
-      callback(response.data.content.data)
+      if (response.data.content.data) {
+        callback(response.data.content.data)
+      } else {
+        console.log('Error sending user info request: ', request)
+      }
     })
 }
 
@@ -101,13 +110,24 @@ function requestProjectInfo (projectId, callback) {
       }
     }
   }
-  axios.post(store.state.serverUrl + '/project/view/', request, {
-    headers: {
-      'Content-Type': 'text/plain'
-    }
-  }).then(response => {
-    callback(response.data.content.data)
-  })
+  axios
+    .post(store.state.serverUrl + '/project/view/', request, {
+      headers: {
+        'Content-Type': 'text/plain'
+      }
+    })
+    .then(response => {
+      if (response.data.content.data) {
+        if (response.data.content.data.status === 0) {
+          response.data.content.data.current_members = stringToArray(
+            response.data.content.data.current_members
+          )
+        }
+        callback(response.data.content.data)
+      } else {
+        console.log('Error sending project info request: ', request)
+      }
+    })
 }
 
 /*
@@ -117,9 +137,7 @@ function dateToYMD (date) {
   var d = date.getDate()
   var m = date.getMonth() + 1 // Month from 0 to 11
   var y = date.getFullYear()
-  return (
-    '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d)
-  )
+  return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d)
 }
 
 export { requestUserInfo, requestProjectInfo, dateToYMD }

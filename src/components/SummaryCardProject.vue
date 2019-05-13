@@ -17,10 +17,14 @@
               >详细信息</el-button>
             </div>
             <div class="card-info">
-              {{info.member_total_need}}人
-              <el-divider direction="vertical"></el-divider>
               <i class="el-icon-date"></i>
               {{dateRange}}
+              <el-divider direction="vertical"></el-divider>
+              总共{{info.member_total_need}}人
+              <span v-if="membersNeeded != 0">
+                <el-divider direction="vertical"></el-divider>
+                尚需{{membersNeeded}}人
+              </span>
             </div>
           </el-main>
         </el-container>
@@ -84,6 +88,9 @@ export default {
       let begin = new Date(this.info.start_date)
       let end = new Date(this.info.end_date)
       return dateToYMD(begin) + ' - ' + dateToYMD(end)
+    },
+    membersNeeded () {
+      return this.info.member_total_need - this.info.current_members.length
     }
   },
   mounted: function () {
