@@ -103,7 +103,7 @@ export default {
             userEmail: this.form.email,
             passwordHash: this.passwordHash
           })
-          this.$router.push('timeline/')
+          this.$router.go(-1)
           break
         case WRONG_PASSWORD:
           this.$message.warning('密码错误！')
