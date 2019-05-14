@@ -131,7 +131,24 @@ export default {
       date: [{ required: true, message: '请选择日期', trigger: 'change' }]
     },
     markdownConfigs: {
-      spellChecker: false
+      spellChecker: false,
+      toolbar: [
+        'bold',
+        'italic',
+        'strikethrough',
+        'horizontal-rule',
+        'heading-1',
+        'heading-2',
+        'heading-3',
+        'code',
+        'quote',
+        'unordered-list',
+        'ordered-list',
+        'clean-block',
+        'link',
+        'image',
+        'table'
+      ]
     }
   }),
   computed: {
@@ -148,7 +165,9 @@ export default {
       // Condition 1: user is logged in
       let result = this.loggedIn
       // Condition 2: project is not full
-      if (this.info.member_total_need === this.info.current_members.length) { result = false }
+      if (this.info.member_total_need === this.info.current_members.length) {
+        result = false
+      }
       // Condition 3: user is not in project
       for (let i = 0; i < this.info.current_members.length; ++i) {
         if (this.info.current_members[i] === this.$store.state.userEmail) {
@@ -163,7 +182,9 @@ export default {
     isDroppable () {
       if (this.info.owner === this.$store.state.userEmail) return false
       for (let i = 0; i < this.info.current_members.length; ++i) {
-        if (this.info.current_members[i] === this.$store.state.userEmail) { return true }
+        if (this.info.current_members[i] === this.$store.state.userEmail) {
+          return true
+        }
       }
       return false
     },
