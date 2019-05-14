@@ -17,7 +17,7 @@ import store from '@/store.js'
  *       requestProject: true,
  *       requestComment: true,
  *     })
- * Returns: {ƒ
+ * Returns: {
  *   status_code: 0,
  *   bio: {
  *     real_name: 'Donald Trump',
