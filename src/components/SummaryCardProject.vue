@@ -17,13 +17,22 @@
               >详细信息</el-button>
             </div>
             <div class="card-info">
-              <i class="el-icon-date"></i>
-              {{dateRange}}
-              <el-divider direction="vertical"></el-divider>
-              总共{{info.member_total_need}}人
+              <span>
+                <i class="el-icon-date"></i>
+                {{dateRange}}
+                <el-divider direction="vertical"></el-divider>
+                总共{{info.member_total_need}}人
+              </span>
               <span v-if="membersNeeded != 0">
                 <el-divider direction="vertical"></el-divider>
                 尚需{{membersNeeded}}人
+              </span>
+              <span>
+              <el-divider direction="vertical"></el-divider>
+              已参加成员：
+              </span>
+              <span v-for="member in info.current_members" :key="member">
+                <user-icon-with-popup class="small-user-icon" :user="member"/>
               </span>
             </div>
           </el-main>
@@ -58,6 +67,11 @@
 }
 .card-info {
   font-size: small;
+  display: flex;
+}
+.small-user-icon {
+  width: 30px;
+  height: 30px;
 }
 </style>
 

@@ -61,9 +61,9 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-button type="primary" @click="goToRegisterPage">立即注册</el-button>
-    <el-button @click="goToLoginPage">登录</el-button>
-    <el-button @click="goToTimelinePage">随便看看</el-button>
+    <el-button class="large-button" type="primary" @click="goToRegisterPage">立即注册</el-button>
+    <el-button class="large-button" @click="goToLoginPage">登录</el-button>
+    <el-button class="large-button" @click="goToTimelinePage">随便看看</el-button>
   </div>
 </template>
 
@@ -74,6 +74,14 @@
 .info-card {
   margin-left: 10px;
   margin-bottom: 10px;
+  height:450px;
+  overflow: scroll;
+}
+.large-button {
+  height: 50px;
+  width: 160px;
+  margin: 20px 10px 20px 10px;
+  font-size:medium;
 }
 </style>
 

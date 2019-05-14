@@ -17,7 +17,7 @@
         <span slot="label">
           <i class="el-icon-edit"></i> 发布合作项目信息
         </span>
-        发布信息
+        <post-form-project/>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -33,10 +33,12 @@
 <script>
 // import axios from 'axios'
 import PostFormLab from '@/components/PostFormLab.vue'
+import PostFormProject from '@/components/PostFormProject'
 
 export default {
   components: {
-    PostFormLab
+    PostFormLab,
+    PostFormProject
   },
   mounted: function () {
     this.checkLoginState()
