@@ -343,7 +343,7 @@ export default {
               let status = response.data.content.data.status
               if (status === 0) {
                 this.$message('删除项目信息成功！')
-                this.$router.push('/')
+                this.$router.go(-1)
               } else {
                 this.$message.error(
                   'Error in Project Delete: Status ' + status
