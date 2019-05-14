@@ -28,8 +28,7 @@
                 尚需{{membersNeeded}}人
               </span>
               <span>
-              <el-divider direction="vertical"></el-divider>
-              已参加成员：
+                <el-divider direction="vertical"></el-divider>已参加成员：
               </span>
               <span v-for="member in info.current_members" :key="member">
                 <user-icon-with-popup class="small-user-icon" :user="member"/>
@@ -39,7 +38,9 @@
         </el-container>
       </div>
       <el-divider class="card-divider"></el-divider>
-      <VueShowdown :markdown="info.description"/>
+      <div class="project-description">
+        <VueShowdown :markdown="info.description"/>
+      </div>
     </el-card>
   </div>
 </template>
@@ -48,6 +49,10 @@
 .summary-card-project {
   margin-top: 10px;
   margin-bottom: 10px;
+  height: 300px;
+}
+.box-card {
+  height: 300px;
 }
 .card-title {
   font-size: larger;
@@ -72,6 +77,10 @@
 .small-user-icon {
   width: 30px;
   height: 30px;
+}
+.project-description {
+  overflow: scroll;
+  height: 180px;
 }
 </style>
 

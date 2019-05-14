@@ -67,8 +67,10 @@ function requestUserInfo (userEmail, callback, options) {
       action: 'view',
       data: {
         lab: requestLab,
-        project: requestProject,
-        seminar: requestSeminar,
+        project_create: requestProject,
+        project_attend: requestProject,
+        seminar_create: requestSeminar,
+        seminar_attend: requestSeminar,
         comment: requestComment
       }
     }
