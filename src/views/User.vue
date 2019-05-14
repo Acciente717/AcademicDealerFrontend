@@ -37,9 +37,25 @@
         <el-tab-pane label="个人简介" name="profile">
           <VueShowdown :markdown="bio.profile" flavor="github" :options="{ emoji: true }"/>
         </el-tab-pane>
-        <el-tab-pane label="TA发布的" name="posts"></el-tab-pane>
-        <el-tab-pane label="正在关注" name="watching"></el-tab-pane>
-        <el-tab-pane label="关注TA的" name="watched"></el-tab-pane>
+        <el-tab-pane label="TA发布的" name="posts">
+          <div v-if="bio.projects_create.length > 0">
+            <summary-card-project
+              v-for="projectId in bio.projects_create"
+              :key="projectId"
+              :id="projectId"
+            />
+          </div>
+          <div v-if="bio.projects_create.length === 0">这位用户还没有发布过什么东西~</div>
+        </el-tab-pane>
+        <el-tab-pane label="TA参与的" name="joining">
+          <div v-if="bio.projects_attend.length > 0">
+          <summary-card-project
+            v-for="projectId in bio.projects_attend"
+            :key="projectId"
+            :id="projectId"
+          /></div>
+          <div v-if="bio.projects_attend.length === 0">这位用户还没有参与过什么活动~</div>
+        </el-tab-pane>
         <el-tab-pane v-if="isOwner" label="编辑个人资料" name="edit">
           <el-form ref="form" :model="bio" label-width="80px" status-icon>
             <el-form-item label="真实姓名" prop="realName">
@@ -66,6 +82,7 @@
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="handleUserEdit">确认修改</el-button>
+              <el-button type="danger" @click="handleUserDelete">删除用户</el-button>
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -98,10 +115,12 @@
 import axios from 'axios'
 import markdownEditor from 'vue-simplemde/src/markdown-editor'
 import { requestUserInfo } from '@/utils.js'
+import SummaryCardProject from '@/components/SummaryCardProject.vue'
 
 export default {
   components: {
-    markdownEditor
+    markdownEditor,
+    SummaryCardProject
   },
   data: () => ({
     bio: {
@@ -113,8 +132,10 @@ export default {
       title: '',
       enrollment_date: '2000-01-01',
       labs: [],
-      projects: [],
-      seminars: [],
+      projects_create: [],
+      projects_attend: [],
+      seminars_create: [],
+      seminars_attend: [],
       comments: [],
       profile: ''
     },
@@ -195,7 +216,6 @@ export default {
           }
         })
         .then(response => {
-          console.log(response)
           let statusCode = response.data.content.data.status
           if (statusCode !== 0) {
             this.$message.error(
@@ -206,6 +226,47 @@ export default {
             this.$message.info('个人资料修改成功！')
           }
         })
+    },
+    handleUserDelete () {
+      this.$confirm('此操作将永久删除此账户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          let request = {
+            dir: 'request',
+            signature: {
+              is_user: true,
+              user_email: this.$store.state.userEmail,
+              password_hash: this.$store.state.passwordHash
+            },
+            content_type: 'account',
+            content: {
+              action: 'delete',
+              data: {}
+            }
+          }
+          axios
+            .post(this.$store.state.serverUrl + '/users/delete/', request, {
+              headers: {
+                'Content-Type': 'text/plain'
+              }
+            })
+            .then(response => {
+              let statusCode = response.data.content.data.status
+              if (statusCode !== 0) {
+                this.$message.error(
+                  '应用内部错误，错误码：' + statusCode + '，请联系开发人员'
+                )
+              } else {
+                this.$message.info('删除账户成功')
+                this.$store.commit('logout')
+                this.$router.push('/')
+              }
+            })
+        })
+        .catch(() => {})
     }
   }
 }
