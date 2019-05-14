@@ -3,7 +3,7 @@
     <h1>This is an timeline page</h1>
     <summary-card-lab/>
     <summary-card-seminar/>
-    <summary-card-project/>
+    <summary-card-project :id="10"/>
   </div>
 </template>
 
