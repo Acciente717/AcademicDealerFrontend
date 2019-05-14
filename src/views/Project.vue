@@ -155,6 +155,9 @@ export default {
           result = false
         }
       }
+      // Condition 4: project has not ended
+      let now = new Date()
+      if (now > new Date(this.info.end_date)) result = false
       return result
     },
     isDroppable () {
