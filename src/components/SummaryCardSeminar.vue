@@ -1,25 +1,94 @@
 <template>
-  <div class="summary-card-seminar">
+  <div class="summary-card-project">
     <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <span>这是一条研讨会信息</span>
-        <el-button
-        style="float: right; padding: 3px 0" type="text"
-        @click="goToSeminarInfoPage">详细信息</el-button>
+      <div class="clearfix">
+        <el-container>
+          <el-aside style="height: 50px; width: 50px;">
+            <user-icon-with-popup :user="info.owner"/>
+          </el-aside>
+          <el-main>
+            <div class="card-title">
+              <strong>{{info.name}}</strong>
+              <el-button
+                class="more-info-button"
+                style="float: right; padding: 3px 0; margin: auto;"
+                type="text"
+                @click="goToSeminarInfoPage"
+              >详细信息</el-button>
+            </div>
+            <div class="card-info">
+              <span>
+                <i class="el-icon-date"></i>
+                {{dateTrans}}
+                <el-divider direction="vertical"></el-divider>
+                总共{{info.member_number_limit}}人
+              </span>
+              <span>
+                <el-divider direction="vertical"></el-divider>已参加成员：
+              </span>
+              <span v-for="member in info.current_members" :key="member">
+                <user-icon-with-popup class="small-user-icon" :user="member"/>
+              </span>
+            </div>
+          </el-main>
+        </el-container>
       </div>
-      <div v-for="o in 4" :key="o" class="text item">{{'List item ' + o }}</div>
-      <el-button text="text" @click="getContent">加载信息</el-button>
-      <div v-if="loading">Now loading</div>
-      <div class="text"> {{ description }}</div>
+      <el-divider class="card-divider"></el-divider>
+      <div class="seminar-description">
+        <VueShowdown :markdown="info.description"/>
+      </div>
     </el-card>
   </div>
 </template>
 
+<style scoped>
+.summary-card-project {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  height: 300px;
+}
+.box-card {
+  height: 300px;
+}
+.card-title {
+  font-size: larger;
+  margin: auto;
+}
+.el-divider {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.el-main {
+  padding: 0px;
+  margin-left: 10px;
+}
+.more-info-button {
+  position: relative;
+  right: 0;
+}
+.card-info {
+  font-size: small;
+  display: flex;
+}
+.small-user-icon {
+  width: 30px;
+  height: 30px;
+}
+.project-description {
+  overflow: scroll;
+  height: 180px;
+}
+</style>
+
 <script>
-import { requestSeminarInfo } from '@/utils.js'
+import UserIconWithPopup from '@/components/UserIconWithPopup.vue'
+import { requestSeminarInfo, dateToYMD } from '@/utils.js'
 
 export default {
   props: ['id'],
+  components: {
+    UserIconWithPopup
+  },
   data: () => ({
     info: {
       status: 0,
@@ -28,12 +97,15 @@ export default {
       owner: '',
       date: '',
       duration: 0,
-      member_number_limit: 100,
+      member_number_limit: 0,
       current_members: '',
       description: ''
     }
   }),
   copmuted: {
+    dateTrans () {
+      return dateToYMD(this.info.date)
+    },
     seatAvailable () {
       return this.info.member_number_limit - this.info.current_members.length
     }
@@ -65,6 +137,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-</style>
