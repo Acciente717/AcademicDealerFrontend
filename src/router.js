@@ -65,6 +65,11 @@ export default new Router({
       path: '/project/:projectId',
       name: 'project',
       component: () => import('./views/Project.vue')
+    },
+    {
+      path: '/seminar/:seminarId',
+      name: 'seminar',
+      component: () => import('./views/Seminar.vue')
     }
   ]
 })

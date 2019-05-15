@@ -122,6 +122,37 @@ function requestProjectInfo (projectId, callback) {
     })
 }
 
+function requestSeminarInfo (projectId, callback) {
+  let request = {
+    dir: 'request',
+    signature: {
+      is_user: true,
+      user_email: store.state.userEmail,
+      password_hash: store.state.passwordHash
+    },
+    content_type: 'project',
+    content: {
+      action: 'view',
+      data: {
+        id: projectId
+      }
+    }
+  }
+  axios
+    .post(store.state.serverUrl + '/seminar/view/', request, {
+      headers: {
+        'Content-Type': 'text/plain'
+      }
+    })
+    .then(response => {
+      if (response.data.content.data) {
+        callback(response.data.content.data)
+      } else {
+        console.log('Error sending seminar info request: ', request)
+      }
+    })
+}
+
 /*
  * return YYYY-MM-DD style date string
  */
@@ -132,4 +163,4 @@ function dateToYMD (date) {
   return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d)
 }
 
-export { requestUserInfo, requestProjectInfo, dateToYMD }
+export { requestUserInfo, requestProjectInfo, requestSeminarInfo, dateToYMD }
