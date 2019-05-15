@@ -11,13 +11,13 @@
         <span slot="label">
           <i class="el-icon-edit"></i> 发布研讨会信息
         </span>
-        发布信息
+        <PostFormSeminar/>
       </el-tab-pane>
       <el-tab-pane>
         <span slot="label">
           <i class="el-icon-edit"></i> 发布合作项目信息
         </span>
-        <post-form-project/>
+        <PostFormProject/>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -32,13 +32,15 @@
 
 <script>
 // import axios from 'axios'
-import PostFormLab from '@/components/PostFormLab.vue'
+import PostFormLab from '@/components/PostFormLab'
 import PostFormProject from '@/components/PostFormProject'
+import PostFormSeminar from '@/components/PostFormSeminar'
 
 export default {
   components: {
     PostFormLab,
-    PostFormProject
+    PostFormProject,
+    PostFormSeminar
   },
   mounted: function () {
     this.checkLoginState()

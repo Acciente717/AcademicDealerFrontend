@@ -122,7 +122,7 @@ function requestProjectInfo (projectId, callback) {
     })
 }
 
-function requestSeminarInfo (projectId, callback) {
+function requestSeminarInfo (seminarId, callback) {
   let request = {
     dir: 'request',
     signature: {
@@ -130,11 +130,11 @@ function requestSeminarInfo (projectId, callback) {
       user_email: store.state.userEmail,
       password_hash: store.state.passwordHash
     },
-    content_type: 'project',
+    content_type: 'seminar',
     content: {
       action: 'view',
       data: {
-        id: projectId
+        id: seminarId
       }
     }
   }

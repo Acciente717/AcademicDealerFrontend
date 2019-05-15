@@ -38,10 +38,10 @@
         <el-divider>
           已参加成员
           <span v-if="isJoinable">
-            <el-button type="text" @click="onJoinProject">加入研讨会</el-button>
+            <el-button type="text" @click="onJoinSeminar">加入研讨会</el-button>
           </span>
           <span v-if="isDroppable">
-            <el-button type="text" @click="onDropProject">退出研讨会</el-button>
+            <el-button type="text" @click="onDropSeminar">退出研讨会</el-button>
           </span>
         </el-divider>
         <div style="display:flex">
@@ -55,15 +55,15 @@
       </div>
       <div v-if="isEditing">
         <el-divider>编辑研讨会信息</el-divider>
-        <el-form ref="projectForm" :model="info" :rules="rules" label-width="120px" status-icon>
-          <el-form-item label="项目名称" prop="name">
+        <el-form ref="seminarForm" :model="info" :rules="rules" label-width="120px" status-icon>
+          <el-form-item label="研讨会名称" prop="name">
             <el-input v-model="info.name"></el-input>
           </el-form-item>
           <el-form-item label="需要人数" prop="member_total_need">
             <el-input-number v-model="info.member_total_need" :min="1" :max="10"></el-input-number>
           </el-form-item>
           <el-divider content-position="center">研讨会描述支持Markdown格式</el-divider>
-          <el-form-item label="项目描述" prop="description">
+          <el-form-item label="研讨会描述" prop="description">
             <markdown-editor
               v-model="info.description"
               :configs="markdownConfigs"
@@ -72,7 +72,7 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onFinishEditPage">完成编辑</el-button>
-            <el-button type="danger" @click="onDeleteProject">删除研讨会</el-button>
+            <el-button type="danger" @click="onDeleteSeminar">删除研讨会</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -259,7 +259,7 @@ export default {
           }
         })
     },
-    onJoinProject () {
+    onJoinSeminar () {
       let request = {
         dir: 'request',
         signature: {
@@ -292,7 +292,7 @@ export default {
           }
         })
     },
-    onDropProject () {
+    onDropSeminar () {
       let request = {
         dir: 'request',
         signature: {
@@ -325,7 +325,7 @@ export default {
           }
         })
     },
-    onDeleteProject () {
+    onDeleteSeminar () {
       this.$confirm('此操作将永久删除该研讨会, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -343,7 +343,7 @@ export default {
             content: {
               action: 'delete',
               data: {
-                id: this.projectId
+                id: this.SeminarId
               }
             }
           }
@@ -360,7 +360,7 @@ export default {
                 this.$router.go(-1)
               } else {
                 this.$message.error(
-                  'Error in Project Delete: Status ' + status
+                  'Error in Seminar Delete: Status ' + status
                 )
                 console.log(request, response)
               }
