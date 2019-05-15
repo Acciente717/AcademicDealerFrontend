@@ -19,7 +19,7 @@
             <div class="card-info">
               <span>
                 <i class="el-icon-date"></i>
-                {{dateTrans}}
+                {{info.date}}
                 <el-divider direction="vertical"></el-divider>
                 总共{{info.member_number_limit}}人
               </span>
@@ -102,10 +102,7 @@ export default {
       description: ''
     }
   }),
-  copmuted: {
-    dateTrans () {
-      return dateToYMD(this.info.date)
-    },
+  computed: {
     seatAvailable () {
       return this.info.member_number_limit - this.info.current_members.length
     }
