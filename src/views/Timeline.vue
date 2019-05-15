@@ -7,13 +7,13 @@
 </template>
 
 <script>
-import SearchResultList from "@/components/SearchResultList.vue";
+import SearchResultList from '@/components/SearchResultList.vue'
 
 export default {
   components: {
     SearchResultList
   }
-};
+}
 </script>
 
 <style>

@@ -65,7 +65,7 @@
 </style>
 
 <script>
-import SearchResultList from "@/components/SearchResultList.vue";
+import SearchResultList from '@/components/SearchResultList.vue'
 
 export default {
   components: {
@@ -75,14 +75,14 @@ export default {
     firstSearch: true,
     hideAdvancedOptions: false,
     form: {
-      keyword: "",
+      keyword: '',
       searchLab: true,
       searchSeminar: true,
       searchOutdated: false,
       searchProject: true,
       searchDescription: false,
-      userEmail: "",
-      userType: ""
+      userEmail: '',
+      userType: ''
     },
     // Its a duplicate of form, which will only be updated upon user click
     // This is to avoid automatically sending search requests
@@ -92,26 +92,26 @@ export default {
       searchOutdated: false,
       searchProject: true,
       searchDescription: false,
-      userEmail: "",
-      userType: ""
+      userEmail: '',
+      userType: ''
     }
   }),
   computed: {
-    advancedOptionsIcon() {
+    advancedOptionsIcon () {
       return this.hideAdvancedOptions
-        ? "el-icon-arrow-up"
-        : "el-icon-arrow-down";
+        ? 'el-icon-arrow-up'
+        : 'el-icon-arrow-down'
     }
   },
   methods: {
-    showAdvanced() {
-      this.hideAdvancedOptions = !this.hideAdvancedOptions;
+    showAdvanced () {
+      this.hideAdvancedOptions = !this.hideAdvancedOptions
     },
-    search() {
-      if (this.firstSearch) this.firstSearch = false;
-      this.searchConditions = this.form;
+    search () {
+      if (this.firstSearch) this.firstSearch = false
+      this.searchConditions = this.form
     },
-    setToDefault() {
+    setToDefault () {
       this.form = {
         keyword: this.form.keyword,
         searchLab: true,
@@ -119,11 +119,10 @@ export default {
         searchOutdated: false,
         searchProject: true,
         searchDescription: false,
-        userEmail: "",
-        userType: ""
-      };
+        userEmail: '',
+        userType: ''
+      }
     }
   }
-};
+}
 </script>
-
