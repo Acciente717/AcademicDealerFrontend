@@ -114,6 +114,7 @@ function requestProjectInfo (projectId, callback) {
       }
     })
     .then(response => {
+      console.log(response)
       if (response.data.content.data) {
         callback(response.data.content.data)
       } else {
