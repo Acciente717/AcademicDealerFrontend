@@ -189,8 +189,8 @@ export default {
       return false
     },
     dateRange () {
-      let begin = new Date(this.info.start_date)
-      let end = new Date(this.info.end_date)
+      let begin = new Date(this.info.start_date.replace(/\s/, 'T'))
+      let end = new Date(this.info.end_date.replace(/\s/, 'T'))
       return dateToYMD(begin) + ' - ' + dateToYMD(end)
     }
   },
