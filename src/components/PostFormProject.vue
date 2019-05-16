@@ -183,7 +183,6 @@ export default {
           }
         })
         .then(response => {
-          console.log(response)
           let status = response.data.content.data.status
           if (status === 0) {
             let projectId = response.data.content.data.id

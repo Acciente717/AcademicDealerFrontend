@@ -1,6 +1,6 @@
 <template>
   <div class="search-result-list">
-    <div v-for="item in results" :key="item">
+    <div v-for="item in results" :key="item.content_type+item.id">
       <SummaryCardLab v-if="item.content_type==='lab'" :id="item.id"/>
       <SummaryCardProject v-if="item.content_type==='project'" :id="item.id"/>
       <SummaryCardSeminar v-if="item.content_type==='seminar'" :id="item.id"/>
@@ -70,7 +70,7 @@ export default {
     searchOutdated: {
       type: Boolean,
       default: function () {
-        return false
+        return true
       }
     }
   },
@@ -108,10 +108,10 @@ export default {
           search_seminar: this.searchSeminar,
           search_project: this.searchProject,
           search_outdated: this.searchOutdated, // 是否检索已经过期的project和seminar信息
-          curr_page: this.currPage // 本次请求的页面号
+          curr_page: this.currPage - 1 // 本次请求的页面号
         }
       }
-      console.log(request)
+      // console.log(request);
       axios
         .post(this.$store.state.serverUrl + '/search/', request, {
           headers: {
@@ -119,10 +119,10 @@ export default {
           }
         })
         .then(response => {
-          console.log(response)
+          // console.log(response);
           if (response.data.status === 0) {
             that.totalResults = response.data.content.total_results
-            that.lastPage = response.data.content.last_page
+            that.lastPage = response.data.content.last_page + 1
             that.results = response.data.content.result
           } else {
             this.$message.error(
