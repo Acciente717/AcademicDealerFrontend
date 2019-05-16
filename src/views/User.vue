@@ -38,23 +38,24 @@
           <VueShowdown :markdown="bio.profile" flavor="github" :options="{ emoji: true }"/>
         </el-tab-pane>
         <el-tab-pane label="TA发布的" name="posts">
-          <div v-if="bio.projects_create.length > 0">
-            <summary-card-project
-              v-for="projectId in bio.projects_create"
-              :key="projectId"
-              :id="projectId"
-            />
-          </div>
-          <div v-if="bio.projects_create.length === 0">这位用户还没有发布过什么东西~</div>
+          <search-result-list
+            :userEmail="userEmail"
+            userType="owner"
+            :searchLab="true"
+            :searchProject="true"
+            :searchSeminar="true"
+            :searchOutdated="true"
+          />
         </el-tab-pane>
         <el-tab-pane label="TA参与的" name="joining">
-          <div v-if="bio.projects_attend.length > 0">
-          <summary-card-project
-            v-for="projectId in bio.projects_attend"
-            :key="projectId"
-            :id="projectId"
-          /></div>
-          <div v-if="bio.projects_attend.length === 0">这位用户还没有参与过什么活动~</div>
+          <search-result-list
+            :userEmail="userEmail"
+            userType="attender"
+            :searchLab="true"
+            :searchProject="true"
+            :searchSeminar="true"
+            :searchOutdated="true"
+          />
         </el-tab-pane>
         <el-tab-pane v-if="isOwner" label="编辑个人资料" name="edit">
           <el-form ref="form" :model="bio" label-width="80px" status-icon>
@@ -115,12 +116,12 @@
 import axios from 'axios'
 import markdownEditor from 'vue-simplemde/src/markdown-editor'
 import { requestUserInfo } from '@/utils.js'
-import SummaryCardProject from '@/components/SummaryCardProject.vue'
+import SearchResultList from '@/components/SearchResultList.vue'
 
 export default {
   components: {
     markdownEditor,
-    SummaryCardProject
+    SearchResultList
   },
   data: () => ({
     bio: {
@@ -140,7 +141,24 @@ export default {
       profile: ''
     },
     markdownConfigs: {
-      spellChecker: false
+      spellChecker: false,
+      toolbar: [
+        'bold',
+        'italic',
+        'strikethrough',
+        'horizontal-rule',
+        'heading-1',
+        'heading-2',
+        'heading-3',
+        'code',
+        'quote',
+        'unordered-list',
+        'ordered-list',
+        'clean-block',
+        'link',
+        'image',
+        'table'
+      ]
     },
     activeTab: 'profile'
   }),
@@ -162,7 +180,7 @@ export default {
   },
   methods: {
     handleUserInfoChange () {
-      console.log('requesting info from' + this.userEmail)
+      // console.log('requesting info from' + this.userEmail)
       requestUserInfo(this.userEmail, this.handleUserInfoResponse, {
         requestLab: true,
         requestSeminar: true,
@@ -171,7 +189,7 @@ export default {
       })
     },
     handleUserInfoResponse (response) {
-      console.log(response)
+      // console.log(response)
       let statusCode = response.status
       if (statusCode !== 0) {
         this.$message.error(

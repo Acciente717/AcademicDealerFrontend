@@ -1,22 +1,17 @@
 <template>
   <div class="timeline">
-    <h1>This is an timeline page</h1>
-    <summary-card-lab/>
-    <summary-card-seminar/>
-    <summary-card-project :id="10"/>
+    <el-card shadow="never">
+      <search-result-list/>
+    </el-card>
   </div>
 </template>
 
 <script>
-import SummaryCardLab from '@/components/SummaryCardLab.vue'
-import SummaryCardProject from '@/components/SummaryCardProject.vue'
-import SummaryCardSeminar from '@/components/SummaryCardSeminar.vue'
+import SearchResultList from '@/components/SearchResultList.vue'
 
 export default {
   components: {
-    SummaryCardLab,
-    SummaryCardProject,
-    SummaryCardSeminar
+    SearchResultList
   }
 }
 </script>

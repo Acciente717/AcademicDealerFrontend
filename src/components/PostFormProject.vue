@@ -72,7 +72,24 @@ export default {
       date: [{ required: true, message: '请选择日期', trigger: 'change' }]
     },
     markdownConfigs: {
-      spellChecker: false
+      spellChecker: false,
+      toolbar: [
+        'bold',
+        'italic',
+        'strikethrough',
+        'horizontal-rule',
+        'heading-1',
+        'heading-2',
+        'heading-3',
+        'code',
+        'quote',
+        'unordered-list',
+        'ordered-list',
+        'clean-block',
+        'link',
+        'image',
+        'table'
+      ]
     }
   }),
   mounted: function () {
@@ -166,7 +183,6 @@ export default {
           }
         })
         .then(response => {
-          console.log(response)
           let status = response.data.content.data.status
           if (status === 0) {
             let projectId = response.data.content.data.id
