@@ -101,7 +101,7 @@ export default {
         content_type: 'search',
         content: {
           keyword: this.keyword, // 默认只检索标题是否含关键词
-          owner_email: this.userEmail, // 以email限定指定用户发布的结果
+          user_email: this.userEmail, // 以email限定指定用户发布的结果
           user_type: this.userType, // 以email限定指定用户参与的结果
           search_description: this.searchDescription, // 是否检索正文
           search_lab: this.searchLab,
@@ -111,6 +111,7 @@ export default {
           curr_page: this.currPage // 本次请求的页面号
         }
       }
+      console.log(request)
       axios
         .post(this.$store.state.serverUrl + '/search/', request, {
           headers: {
@@ -118,9 +119,16 @@ export default {
           }
         })
         .then(response => {
-          that.totalResults = response.data.content.total_results
-          that.lastPage = response.data.content.last_page
-          that.results = response.data.content.result
+          console.log(response)
+          if (response.data.status === 0) {
+            that.totalResults = response.data.content.total_results
+            that.lastPage = response.data.content.last_page
+            that.results = response.data.content.result
+          } else {
+            this.$message.error(
+              'Search Response Error: Status ' + response.data.status
+            )
+          }
         })
     },
     handlePageChange (val) {
