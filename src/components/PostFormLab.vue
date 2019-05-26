@@ -240,7 +240,7 @@ export default {
       console.log(this.labForm.supervisors)
       console.log(request)
       axios
-        .post(this.$store.state.serverUrl + '/labs/create/',
+        .post(this.$store.state.serverUrl + '/lab/create/',
           request, {
             headers: {
               'Content-Type': 'text/plain'
