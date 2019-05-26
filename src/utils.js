@@ -130,7 +130,7 @@ function requestSeminarInfo (projectId, callback) {
       user_email: store.state.userEmail,
       password_hash: store.state.passwordHash
     },
-    content_type: 'project',
+    content_type: 'seminar',
     content: {
       action: 'view',
       data: {
