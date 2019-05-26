@@ -14,6 +14,18 @@
               @click="goToEditTab"
               style="padding-top:8px; padding-bottom:8px; padding-left: 8px;"
             >编辑个人资料</el-button>
+            <el-button
+              v-if="canFollow"
+              type="text"
+              @click="followUser"
+              style="padding-top:8px; padding-bottom:8px; padding-left: 8px;"
+            >关注</el-button>
+            <el-button
+              v-if="canUnfollow"
+              type="text"
+              @click="unfollowUser"
+              style="padding-top:8px; padding-bottom:8px; padding-left: 8px;"
+            >取消关注</el-button>
           </div>
           <el-form size="mini">
             <el-form-item v-if="this.bio.real_name!==''" style="margin-bottom: 0px" label="姓名">
@@ -56,6 +68,16 @@
             :searchSeminar="true"
             :searchOutdated="true"
           />
+        </el-tab-pane>
+        <el-tab-pane label="TA关注的" name="following">
+          <div v-for="email in bio.follows" :key="email">
+            <user-icon-with-popup :user="email" style="width:75px; height: 75px;"/>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="关注TA的" name="followed">
+          <div v-for="email in bio.follow_by" :key="email">
+            <user-icon-with-popup :user="email" style="width:75px; height: 75px;"/>
+          </div>
         </el-tab-pane>
         <el-tab-pane v-if="isOwner" label="编辑个人资料" name="edit">
           <el-form ref="form" :model="bio" label-width="80px" status-icon>
@@ -117,11 +139,13 @@ import axios from 'axios'
 import markdownEditor from 'vue-simplemde/src/markdown-editor'
 import { requestUserInfo } from '@/utils.js'
 import SearchResultList from '@/components/SearchResultList.vue'
+import UserIconWithPopup from '@/components/UserIconWithPopup.vue'
 
 export default {
   components: {
     markdownEditor,
-    SearchResultList
+    SearchResultList,
+    UserIconWithPopup
   },
   data: () => ({
     bio: {
@@ -132,6 +156,8 @@ export default {
       department: '',
       title: '',
       enrollment_date: '2000-01-01',
+      follow_by: [],
+      follows: [],
       labs: [],
       projects_create: [],
       projects_attend: [],
@@ -168,6 +194,20 @@ export default {
     },
     isOwner () {
       return this.userEmail === this.$store.state.userEmail
+    },
+    canFollow () {
+      return (
+        this.$store.state.loggedIn &&
+        this.userEmail !== this.$store.state.userEmail &&
+        this.bio.follow_by.indexOf(this.$store.state.userEmail) === -1
+      )
+    },
+    canUnfollow () {
+      return (
+        this.$store.state.loggedIn &&
+        this.userEmail !== this.$store.state.userEmail &&
+        this.bio.follow_by.indexOf(this.$store.state.userEmail) !== -1
+      )
     }
   },
   mounted: function () {
@@ -285,6 +325,75 @@ export default {
             })
         })
         .catch(() => {})
+    },
+    followUser () {
+      let request = {
+        dir: 'request',
+        signature: {
+          is_user: true,
+          user_email: this.$store.state.userEmail,
+          password_hash: this.$store.state.passwordHash
+        },
+        content_type: 'account',
+        content: {
+          action: 'follow',
+          data: {
+            person: this.userEmail
+          }
+        }
+      }
+      console.log(request)
+      axios
+        .post(this.$store.state.serverUrl + '/users/follow/', request, {
+          headers: {
+            'Content-Type': 'text/plain'
+          }
+        })
+        .then(response => {
+          let statusCode = response.data.content.data.status
+          if (statusCode !== 0) {
+            this.$message.error(
+              '应用内部错误，错误码：' + statusCode + '，请联系开发人员'
+            )
+          } else {
+            this.$message.info('关注账户成功')
+            this.handleUserInfoChange()
+          }
+        })
+    },
+    unfollowUser () {
+      let request = {
+        dir: 'request',
+        signature: {
+          is_user: true,
+          user_email: this.$store.state.userEmail,
+          password_hash: this.$store.state.passwordHash
+        },
+        content_type: 'account',
+        content: {
+          action: 'unfollow',
+          data: {
+            person: this.userEmail
+          }
+        }
+      }
+      axios
+        .post(this.$store.state.serverUrl + '/users/unfollow/', request, {
+          headers: {
+            'Content-Type': 'text/plain'
+          }
+        })
+        .then(response => {
+          let statusCode = response.data.content.data.status
+          if (statusCode !== 0) {
+            this.$message.error(
+              '应用内部错误，错误码：' + statusCode + '，请联系开发人员'
+            )
+          } else {
+            this.$message.info('取消关注账户成功')
+            this.handleUserInfoChange()
+          }
+        })
     }
   }
 }
