@@ -1,6 +1,6 @@
 <template>
   <div class="user-icon-with-popup">
-    <el-popover placement="top">
+    <el-popover placement="top" :width="200">
       <div>
         <span class="user-profile-title">{{userInfo.nick_name}}</span>
         <el-button size="mini" @click="goToUserPage" type="text">个人资料</el-button>
@@ -26,7 +26,7 @@
 
 <style scoped>
 .user-icon {
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
   margin-right: 2px;
   margin-left: 2px;
   border: 1px;

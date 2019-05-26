@@ -6,14 +6,15 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    { path: '/', name: 'home', component: Home }, {
+    { path: '/', name: 'home', component: Home },
+    {
       path: '/about',
       name: 'about',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () =>
-          import(/* webpackChunkName: "about" */ './views/About.vue')
+        import(/* webpackChunkName: "about" */ './views/About.vue')
     },
     {
       path: '/timeline',
@@ -59,6 +60,16 @@ export default new Router({
       path: '/labedit/:labId',
       name: 'labedit',
       component: () => import('./views/LabEdit.vue')
+    },
+    {
+      path: '/project/:projectId',
+      name: 'project',
+      component: () => import('./views/Project.vue')
+    },
+    {
+      path: '/seminar/:seminarId',
+      name: 'seminar',
+      component: () => import('./views/Seminar.vue')
     }
   ]
 })

@@ -42,7 +42,8 @@
         <el-form-item label="学位/职称" prop="title">
           <el-input v-model="form.title" placeholder="本科/硕士/博士/副教授/教授等"></el-input>
         </el-form-item>
-        <el-form-item label="个人简介" prop="profile">
+         <el-divider content-position="center">自我介绍支持Markdown格式</el-divider>
+        <el-form-item label="自我介绍" prop="profile">
           <markdown-editor v-model="form.profile" :configs="markdownConfigs" ref="markdownEditor"></markdown-editor>
         </el-form-item>
       </el-form>
@@ -168,7 +169,24 @@ export default {
         ]
       },
       markdownConfigs: {
-        spellChecker: false
+        spellChecker: false,
+        toolbar: [
+          'bold',
+          'italic',
+          'strikethrough',
+          'horizontal-rule',
+          'heading-1',
+          'heading-2',
+          'heading-3',
+          'code',
+          'quote',
+          'unordered-list',
+          'ordered-list',
+          'clean-block',
+          'link',
+          'image',
+          'table'
+        ]
       },
       passwordHash: ''
     }

@@ -63,8 +63,11 @@
   z-index: 999;
 }
 .main-container {
-  display: block;
-  margin: 45px 1% 0 1%;
+  width: 100%;
+  max-width: 1000px;
+  margin-top: 45px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .el-footer {
   margin: auto;
