@@ -9,7 +9,7 @@
     <el-form-item label="日期" prop="date">
       <el-date-picker
         v-model="info.date"
-        type="daterange"
+        type="datetimerange"
         align="right"
         unlink-panels
         range-separator="至"
@@ -34,7 +34,7 @@
 </style>
 
 <script>
-import { requestSeminarInfo, dateToYMD } from '@/utils.js'
+import { requestSeminarInfo, timeToString } from '@/utils.js'
 import axios from 'axios'
 import MarkdownEditor from 'vue-simplemde/src/markdown-editor'
 
@@ -111,9 +111,11 @@ export default {
   },
   methods: {
     handleDateSelect () {
+      console.log(this.info.date[0])
       if (this.info.date) {
-        this.info.start_date = dateToYMD(this.info.date[0])
-        this.info.end_date = dateToYMD(this.info.date[1])
+        this.info.start_date = timeToString(this.info.date[0])
+        // console.log(this.info.start_date)
+        this.info.end_date = timeToString(this.info.date[1])
       } else {
         this.info.start_date = ''
         this.info.end_date = ''
@@ -176,6 +178,7 @@ export default {
           }
         }
       }
+      console.log(request)
       axios
         .post(this.$store.state.serverUrl + '/seminar/create/', request, {
           headers: {
@@ -183,6 +186,7 @@ export default {
           }
         })
         .then(response => {
+          console.log(response)
           let status = response.data.content.data.status
           if (status === 0) {
             let seminarId = response.data.content.data.id

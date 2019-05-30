@@ -176,6 +176,7 @@ export default {
           }
         }
       }
+      // console.log(request)
       axios
         .post(this.$store.state.serverUrl + '/project/create/', request, {
           headers: {

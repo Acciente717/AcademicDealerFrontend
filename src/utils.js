@@ -163,4 +163,20 @@ function dateToYMD (date) {
   return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d)
 }
 
-export { requestUserInfo, requestProjectInfo, requestSeminarInfo, dateToYMD }
+/*
+ * return string of time in HH:MM:SS style
+ */
+function timeToHMS (time) {
+  var h = time.getHours()
+  var m = time.getMinutes()
+  var s = time.getSeconds()
+  return '' + (h <= 9 ? '0' + h : h) + ':' + (m <= 9 ? '0' + m : m) + ':' + (s <= 9 ? '0' + s : s)
+}
+/*
+ * return full time
+ */
+function timeToString (time) {
+  return dateToYMD(time) + ' ' + timeToHMS(time)
+}
+
+export { requestUserInfo, requestProjectInfo, requestSeminarInfo, dateToYMD, timeToString }
