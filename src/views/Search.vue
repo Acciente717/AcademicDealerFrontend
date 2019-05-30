@@ -82,7 +82,7 @@ export default {
       searchProject: true,
       searchDescription: false,
       userEmail: '',
-      userType: ''
+      userType: 'owner'
     },
     // Its a duplicate of form, which will only be updated upon user click
     // This is to avoid automatically sending search requests
@@ -93,7 +93,7 @@ export default {
       searchProject: true,
       searchDescription: false,
       userEmail: '',
-      userType: ''
+      userType: 'owner'
     }
   }),
   computed: {
