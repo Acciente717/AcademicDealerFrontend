@@ -45,7 +45,7 @@
         </div>
         <el-divider>项目简介</el-divider>
         <VueShowdown :markdown="info.description"/>
-        <el-divider>讨论区</el-divider>
+        <comment-area type="project" :id="projectId"/>
       </div>
       <div v-if="isEditing">
         <el-divider>编辑项目信息</el-divider>
@@ -94,12 +94,14 @@
 import { requestProjectInfo, dateToYMD } from '@/utils.js'
 import UserIconWithPopup from '@/components/UserIconWithPopup.vue'
 import MarkdownEditor from 'vue-simplemde/src/markdown-editor'
+import CommentArea from '@/components/CommentArea.vue'
 import axios from 'axios'
 
 export default {
   components: {
     UserIconWithPopup,
-    MarkdownEditor
+    MarkdownEditor,
+    CommentArea
   },
   data: () => ({
     info: {
@@ -112,6 +114,7 @@ export default {
       member_total_need: 1,
       description: '',
       current_members: [],
+      comments: [],
       date: ['', '']
     },
     isEditing: false,
