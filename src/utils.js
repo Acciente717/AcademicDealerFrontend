@@ -164,4 +164,28 @@ function dateToYMD (date) {
   return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d)
 }
 
-export { requestUserInfo, requestProjectInfo, requestSeminarInfo, dateToYMD }
+/*
+ * return YYYY-MM-DD HH:MM:SS style date string
+ */
+function dateToYMDHMS (date) {
+  var d = date.getDate()
+  var m = date.getMonth() + 1 // Month from 0 to 11
+  var y = date.getFullYear()
+  var h = date.getHours()
+  var min = date.getMinutes()
+  var s = date.getSeconds()
+  return (
+    '' +
+    y +
+    '-' +
+    (m <= 9 ? '0' + m : m) +
+    '-' +
+    (d <= 9 ? '0' + d : d) +
+    ' ' +
+    (h <= 9 ? '0' + h : h) +
+    ':' +
+    (min <= 9 ? '0' + min : min) + ':' + (s <= 9 ? '0' + s : s)
+  )
+}
+
+export { requestUserInfo, requestProjectInfo, requestSeminarInfo, dateToYMD, dateToYMDHMS }
