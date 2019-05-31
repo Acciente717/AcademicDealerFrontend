@@ -1,7 +1,7 @@
 <template>
   <div class="lab-supervisor-card">
     <el-container>
-      <el-aside style="width: 80px">
+      <el-aside style="width: 100px">
         <el-image :src="userPicUrl"/>
       </el-aside>
       <el-main>
@@ -10,7 +10,7 @@
         <el-button v-if="supervisorInfo.isUser" size="mini" @click="goToUserPage" type="text">个人资料</el-button>
       </el-main>
     </el-container>
-    <el-form size="mini">
+    <el-form size="medium">
       <el-form-item v-if="supervisorInfo.school!==''" style="margin-bottom: 0px" label="学校">
         <span>{{supervisorInfo.school}}</span>
       </el-form-item>

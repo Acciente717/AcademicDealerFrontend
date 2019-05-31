@@ -1,81 +1,77 @@
 <template>
   <div class="lab">
-    <el-container style="height:80px;">
-      <el-aside width="75px" style="height:75px;" class="user-icon">
-        <user-icon-with-popup style="width:75px; height: 75px;" :user="info.owner_email"/>
-      </el-aside>
-      <div style="font-size:large;">
-        <b>{{this.info.name}}</b>
-        <el-button
-          v-if="isOwner"
-          type="text"
-          style="padding-top:8px; padding-bottom:8px; padding-left: 8px;"
-          @click="onEditPage"
-        >编辑实验室信息</el-button>
-      </div>
-    </el-container>
+    <el-image class="center" style="height: 200px" fit="cover" :src="testLab.pic_url"/>
+
     <el-container>
-      <el-aside>
-        <el-image :src="testLab.pic_url">
-        </el-image>
-      </el-aside>
       <el-main>
         <h1 id="labName" style="text-align: center"> {{info.name}} </h1>
       </el-main>
     </el-container>
-
-    <el-container style="margin-top: 50px">
-      <el-header style="text-align: center; font-size: large;">基本信息</el-header>
-      <!-- Basic information for lab -->
-      <el-main v-if="isEditing">
-        <el-divider>编辑实验室信息</el-divider>
-        <el-form ref="seminarForm" :model="info" :rules="rules" label-width="120px" status-icon>
-          <el-form-item label="实验室名称" prop="name">
-            <el-input v-model="info.name"></el-input>
-          </el-form-item>
-          <el-divider content-position="center">研讨会描述支持Markdown格式</el-divider>
-          <el-form-item label="研讨会描述" prop="description">
-            <markdown-editor
-              v-model="info.description"
-              :configs="markdownConfigs"
-              ref="markdownEditor"
-            ></markdown-editor>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="onFinishEditPage">完成编辑</el-button>
-            <el-button type="danger" @click="onDeleteSeminar">删除研讨会</el-button>
-          </el-form-item>
-        </el-form>
-      </el-main>
-      <el-main v-else>
-        <el-container>
-          <el-table
-            :data="infoTable"
-            stripe
-            style="width: 100%">
-            <el-table-column
-              prop="name"
-              label="项目"
-              width="80px">
-            </el-table-column>
-            <el-table-column
-              prop="value"
-              label="内容">
-            </el-table-column>
-          </el-table>
-        </el-container>
-        <el-divider>成员</el-divider>
-        <el-container>
-          <lab-supervisor-card
-            v-for="(s, index)  in toCamelCase(supervisors)"
-            :supervisor="s"
-            :key="index"/>
-        </el-container>
-        <el-container>
-          <comment-area type="lab" :id="labId"/>
-        </el-container>
-      </el-main>
+    <el-container>
+      <el-divider>基本信息</el-divider>
     </el-container>
+    <el-container>
+      <el-button
+        v-if="isOwner"
+        class="center"
+        type="text"
+        @click="onEditPage"
+      >编辑</el-button>
+    </el-container>
+    <!-- Basic information for lab -->
+    <el-main v-if="isEditing">
+      <el-divider>编辑实验室信息</el-divider>
+      <PostFormLab :originLab="info"/>
+      <el-form ref="seminarForm" :model="info" :rules="rules" label-width="120px" status-icon>
+        <el-form-item label="实验室名称" prop="name">
+          <el-input v-model="info.name"></el-input>
+        </el-form-item>
+        <el-divider content-position="center">研讨会描述支持Markdown格式</el-divider>
+        <el-form-item label="研讨会描述" prop="description">
+          <markdown-editor
+            v-model="info.description"
+            :configs="markdownConfigs"
+            ref="markdownEditor"
+          ></markdown-editor>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onFinishEditPage">完成编辑</el-button>
+          <el-button type="danger" @click="onDeleteSeminar">删除研讨会</el-button>
+        </el-form-item>
+      </el-form>
+    </el-main>
+    <el-main v-else>
+      <el-container>
+        <el-table
+          :data="infoTable"
+          stripe
+          style="width: 100%">
+          <el-table-column
+            prop="name"
+            label="项目"
+            width="180px">
+          </el-table-column>
+          <el-table-column
+            prop="value"
+            label="内容">
+          </el-table-column>
+        </el-table>
+      </el-container>
+      <el-divider>成员</el-divider>
+      <el-container>
+        <lab-supervisor-card
+          v-for="(s, index)  in toCamelCase(supervisors)"
+          :supervisor="s"
+          :key="index"/>
+      </el-container>
+      <el-container>
+        <comment-area type="lab" :id="labId"/>
+      </el-container>
+      <el-divider>简介</el-divider>
+      <el-container>
+        <VueShowdown :markdown="info.description"/>
+      </el-container>
+    </el-main>
   </div>
 </template>
 
@@ -84,28 +80,47 @@
 #labName {
   font-size: xx-large;
 }
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
 </style>
 
 <script>
-import UserIconWithPopup from '@/components/UserIconWithPopup.vue'
 import MarkdownEditor from 'vue-simplemde/src/markdown-editor'
 import CommentArea from '@/components/CommentArea.vue'
 import LabSupervisorCard from '@/components/LabSupervisorCard.vue'
+import PostFormLab from '@/components/PostFormLab.vue'
 // import axios from 'axios'
 
 export default {
   components: {
-    UserIconWithPopup,
     MarkdownEditor,
     CommentArea,
-    LabSupervisorCard
+    LabSupervisorCard,
+    PostFormLab
   },
   data: () => ({
     isLoading: true,
     isError: false,
     isEditing: false,
     info: {
-      id: -1
+      id: -1,
+      name: '',
+      school: '',
+      department: '',
+      owner_email: '',
+      address: '',
+      phone: '',
+      front_page_url: '',
+      pic_url: '',
+      supervisors: '',
+      comments: '',
+      description: '',
+      create_date: new Date('2019-05-26'.replace(/\s/, 'T')),
+      modified_date: new Date('2019-05-26'.replace(/\s/, 'T'))
     },
     testLab: {
       id: 1,
@@ -128,12 +143,23 @@ export default {
         contact_email: 't@t.t',
         address: 'yiheyuan 5',
         profile: '**very cool**'
+      }, {
+        name: 'other guy',
+        school: 'test school',
+        department: 'test department',
+        title: 'prof',
+        pic_url: '',
+        is_user: false,
+        account_email: 't@t.t',
+        contact_email: 't@t.t',
+        address: 'yiheyuan 5',
+        profile: '**very cool**'
       }]),
       comments: JSON.stringify([{
         comment_id: 1,
         description: 'indeed cool'
       }]),
-      description: 'some testing lab',
+      description: 'some **testing** lab',
       create_date: new Date('2019-05-26'.replace(/\s/, 'T')),
       modified_date: new Date('2019-05-26'.replace(/\s/, 'T'))
     }
@@ -143,7 +169,6 @@ export default {
     // TODO: load the true lab with id
     this.info = this.testLab
     this.isLoading = false
-    this.editing = true
   },
   watch: {
     $route (to, from) {

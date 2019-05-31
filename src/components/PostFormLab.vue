@@ -91,6 +91,7 @@ import axios from 'axios'
 import markdownEditor from 'vue-simplemde/src/markdown-editor'
 
 export default {
+  props: ['originLab'],
   components: {
     markdownEditor
   },
@@ -268,13 +269,26 @@ export default {
         })
     },
     handleLabResponce (response) {
-      console.log(response)
+      // console.log(response)
       let statusCode = response.data.content.data.status
       if (statusCode !== 0) {
         this.$message.error('创建实验室信息错误，错误码：' + statusCode + '，请联系开发人员')
       } else {
+        let labId = response.data.content.data.id
         this.$message.info('创建实验室信息成功！')
+        this.$router.push('/lab/' + labId)
       }
+    },
+    bindOrigin (origin) {
+      return false
+    }
+  },
+  mounted: function () {
+    if (this.originLab !== undefined) {
+      this.isEditing = true
+      // console.log('originlab')
+      // console.log(this.originLab)
+      this.bindOrigin(this.originLab)
     }
   }
 }
