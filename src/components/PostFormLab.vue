@@ -235,6 +235,7 @@ export default {
             school: this.labForm.school,
             department: this.labForm.department,
             owner_email: this.isEditing ? this.$store.state.userEmail : '',
+            owner: this.isEditing ? this.$store.state.userEmail : '',
             address: this.labForm.address,
             phone: this.labForm.phone,
             front_page_url: this.labForm.frontPageUrl,
@@ -259,8 +260,9 @@ export default {
       }
       // console.log(this.labForm.supervisors)
       console.log(request)
+      let url = this.isEditing ? 'edit' : 'create'
       axios
-        .post(this.$store.state.serverUrl + '/lab/create/',
+        .post(this.$store.state.serverUrl + '/lab/' + url + '/',
           request, {
             headers: {
               'Content-Type': 'text/plain'
