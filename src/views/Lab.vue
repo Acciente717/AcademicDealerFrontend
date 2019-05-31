@@ -27,43 +27,28 @@
     <el-container style="margin-top: 50px">
       <el-header style="text-align: center; font-size: large;">基本信息</el-header>
       <!-- Basic information for lab -->
-      <el-main>
-        <el-container v-if="isEditing">
-          <el-divider>编辑实验室信息</el-divider>
-          <el-form ref="seminarForm" :model="info" :rules="rules" label-width="120px" status-icon>
-            <el-form-item label="实验室名称" prop="name">
-              <el-input v-model="info.name"></el-input>
-            </el-form-item>
-            <el-form-item label="需要人数" prop="member_number_limit">
-              <el-input-number v-model="info.member_number_limit" :min="1" :max="10"></el-input-number>
-            </el-form-item>
-            <el-form-item label="日期" prop="date">
-              <el-date-picker
-                v-model="info.date"
-                type="daterange"
-                align="right"
-                unlink-panels
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                @change="handleDateSelect"
-              ></el-date-picker>
-            </el-form-item>
-            <el-divider content-position="center">研讨会描述支持Markdown格式</el-divider>
-            <el-form-item label="研讨会描述" prop="description">
-              <markdown-editor
-                v-model="info.description"
-                :configs="markdownConfigs"
-                ref="markdownEditor"
-              ></markdown-editor>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="onFinishEditPage">完成编辑</el-button>
-              <el-button type="danger" @click="onDeleteSeminar">删除研讨会</el-button>
-            </el-form-item>
-          </el-form>
-        </el-container>
-        <el-container v-else>
+      <el-main v-if="isEditing">
+        <el-divider>编辑实验室信息</el-divider>
+        <el-form ref="seminarForm" :model="info" :rules="rules" label-width="120px" status-icon>
+          <el-form-item label="实验室名称" prop="name">
+            <el-input v-model="info.name"></el-input>
+          </el-form-item>
+          <el-divider content-position="center">研讨会描述支持Markdown格式</el-divider>
+          <el-form-item label="研讨会描述" prop="description">
+            <markdown-editor
+              v-model="info.description"
+              :configs="markdownConfigs"
+              ref="markdownEditor"
+            ></markdown-editor>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onFinishEditPage">完成编辑</el-button>
+            <el-button type="danger" @click="onDeleteSeminar">删除研讨会</el-button>
+          </el-form-item>
+        </el-form>
+      </el-main>
+      <el-main v-else>
+        <el-container>
           <el-table
             :data="infoTable"
             stripe
@@ -79,12 +64,23 @@
             </el-table-column>
           </el-table>
         </el-container>
+        <el-divider>成员</el-divider>
+        <el-container>
+          <lab-supervisor-card
+            v-for="(s, index)  in toCamelCase(supervisors)"
+            :supervisor="s"
+            :key="index"/>
+        </el-container>
+        <el-container>
+          <comment-area type="lab" :id="labId"/>
+        </el-container>
       </el-main>
     </el-container>
   </div>
 </template>
 
 <style scoped>
+@import "~simplemde/dist/simplemde.min.css";
 #labName {
   font-size: xx-large;
 }
@@ -92,10 +88,17 @@
 
 <script>
 import UserIconWithPopup from '@/components/UserIconWithPopup.vue'
+import MarkdownEditor from 'vue-simplemde/src/markdown-editor'
+import CommentArea from '@/components/CommentArea.vue'
+import LabSupervisorCard from '@/components/LabSupervisorCard.vue'
+// import axios from 'axios'
 
 export default {
   components: {
-    UserIconWithPopup
+    UserIconWithPopup,
+    MarkdownEditor,
+    CommentArea,
+    LabSupervisorCard
   },
   data: () => ({
     isLoading: true,
@@ -119,12 +122,12 @@ export default {
         school: 'test school',
         department: 'test department',
         title: 'prof',
-        pic_url: 'no such pic',
-        is_user: true,
+        pic_url: '',
+        is_user: false,
         account_email: 't@t.t',
         contact_email: 't@t.t',
         address: 'yiheyuan 5',
-        profile: 'very cool'
+        profile: '**very cool**'
       }]),
       comments: JSON.stringify([{
         comment_id: 1,
@@ -171,6 +174,13 @@ export default {
       }, {
         name: '主页', value: this.info.front_page_url
       }]
+    },
+    supervisors () {
+      if (this.info.supervisors !== undefined && this.info.supervisors !== '') {
+        return JSON.parse(this.info.supervisors)
+      } else {
+        return []
+      }
     }
   },
   methods: {
@@ -180,6 +190,17 @@ export default {
     },
     onEditPage () {
       this.isEditing = true
+    },
+    toCamelCase (underlines) {
+      underlines.forEach((s, i) => {
+        let cs = s
+        cs.isUser = s.is_user
+        cs.accountEmail = s.account_email
+        cs.contactEmail = s.contact_email
+        cs.picUrl = s.pic_url
+        return cs
+      })
+      return underlines
     }
   }
 }
