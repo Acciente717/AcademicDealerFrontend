@@ -7,40 +7,17 @@
         <h1 id="labName" style="text-align: center"> {{info.name}} </h1>
       </el-main>
     </el-container>
-    <el-container>
-      <el-divider>基本信息</el-divider>
-    </el-container>
-    <el-container>
-      <el-button
-        v-if="isOwner"
-        class="center"
-        type="text"
-        @click="onEditPage"
-      >编辑</el-button>
-    </el-container>
     <!-- Basic information for lab -->
     <el-main v-if="isEditing">
       <el-divider>编辑实验室信息</el-divider>
       <PostFormLab :originLab="info"/>
-      <el-form ref="seminarForm" :model="info" :rules="rules" label-width="120px" status-icon>
-        <el-form-item label="实验室名称" prop="name">
-          <el-input v-model="info.name"></el-input>
-        </el-form-item>
-        <el-divider content-position="center">研讨会描述支持Markdown格式</el-divider>
-        <el-form-item label="研讨会描述" prop="description">
-          <markdown-editor
-            v-model="info.description"
-            :configs="markdownConfigs"
-            ref="markdownEditor"
-          ></markdown-editor>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onFinishEditPage">完成编辑</el-button>
-          <el-button type="danger" @click="onDeleteSeminar">删除研讨会</el-button>
-        </el-form-item>
-      </el-form>
+      <el-button type="text" @click.prevent="onCancelEditing">取消编辑</el-button>
+      <el-button type="danger" @click.prevent="onDeleteLab">删除实验室</el-button>
     </el-main>
     <el-main v-else>
+      <el-container>
+        <el-divider>基本信息</el-divider>
+      </el-container>
       <el-container>
         <el-table
           :data="infoTable"
@@ -71,6 +48,13 @@
       <el-container>
         <VueShowdown :markdown="info.description"/>
       </el-container>
+      <el-container>
+        <el-button
+          v-if="isOwner"
+          type="text"
+          @click="onEditPage"
+        >编辑</el-button>
+      </el-container>
     </el-main>
   </div>
 </template>
@@ -89,15 +73,13 @@
 </style>
 
 <script>
-import MarkdownEditor from 'vue-simplemde/src/markdown-editor'
 import CommentArea from '@/components/CommentArea.vue'
 import LabSupervisorCard from '@/components/LabSupervisorCard.vue'
 import PostFormLab from '@/components/PostFormLab.vue'
-// import axios from 'axios'
+import axios from 'axios'
 
 export default {
   components: {
-    MarkdownEditor,
     CommentArea,
     LabSupervisorCard,
     PostFormLab
@@ -216,6 +198,59 @@ export default {
     onEditPage () {
       this.isEditing = true
     },
+    onDeleteLab () {
+      this.$confirm('确定删除实验室？', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.confirmDeleteLab()
+      }).catch(() => {})
+    },
+    confirmDeleteLab () {
+      let request = {
+        dir: 'request',
+        signature: {
+          is_user: true,
+          user_email: this.$store.state.userEmail,
+          password_hash: this.$store.state.passwordHash
+        },
+        content_type: 'lab',
+        content: {
+          action: 'delete',
+          data: {
+            id: this.labId
+          }
+        }
+      }
+      axios
+        .post(this.$store.state.serverUrl + '/lab/delete/',
+          request, {
+            headers: {
+              'Content-Type': 'text/plain'
+            }
+          })
+        .then(response => {
+          this.handleLabResponce(response)
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+    },
+    handleLabResponce (response) {
+      // console.log(response)
+      let statusCode = response.data.content.data.status
+      if (statusCode !== 0) {
+        this.$message.error('删除实验室信息错误，错误码：' + statusCode + '，请联系开发人员')
+      } else {
+        this.$message.info('删除实验室信息成功！')
+        this.$router.go(-1)
+      }
+    },
+
     toCamelCase (underlines) {
       underlines.forEach((s, i) => {
         let cs = s
@@ -226,6 +261,15 @@ export default {
         return cs
       })
       return underlines
+    },
+    onCancelEditing () {
+      this.$confirm('确定取消编辑实验室信息？', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.isEditing = false
+      }).catch(() => {})
     }
   }
 }

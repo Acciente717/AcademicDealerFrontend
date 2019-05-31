@@ -96,7 +96,9 @@ export default {
     markdownEditor
   },
   data: () => ({
+    isEditing: false,
     labForm: {
+      id: -1,
       name: '',
       school: '',
       department: '',
@@ -255,8 +257,8 @@ export default {
           }
         }
       }
-      console.log(this.labForm.supervisors)
-      console.log(request)
+      // console.log(this.labForm.supervisors)
+      // console.log(request)
       axios
         .post(this.$store.state.serverUrl + '/lab/create/',
           request, {
@@ -267,20 +269,61 @@ export default {
         .then(response => {
           this.handleLabResponce(response)
         })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消创建'
+          })
+        })
     },
     handleLabResponce (response) {
       // console.log(response)
+      let currentAction = ''
+      if (this.isEditing) {
+        currentAction = '编辑'
+      } else {
+        currentAction = '创建'
+      }
       let statusCode = response.data.content.data.status
       if (statusCode !== 0) {
-        this.$message.error('创建实验室信息错误，错误码：' + statusCode + '，请联系开发人员')
+        this.$message.error(currentAction + '实验室信息错误，错误码：' + statusCode + '，请联系开发人员')
       } else {
         let labId = response.data.content.data.id
-        this.$message.info('创建实验室信息成功！')
+        this.$message.info(currentAction + '实验室信息成功！')
         this.$router.push('/lab/' + labId)
       }
     },
-    bindOrigin (origin) {
-      return false
+    bindOrigin (l) {
+      this.labForm.id = l.id
+      this.labForm.name = l.name
+      this.labForm.school = l.school
+      this.labForm.department = l.department
+      this.labForm.address = l.address
+      this.labForm.frontPageUrl = l.front_page_url
+      this.labForm.picUrl = l.pic_url
+      this.labForm.logoUrl = ''
+      if (l.supervisors !== undefined && l.supervisors !== '') {
+        this.labForm.supervisors = this.toCamelCase(JSON.parse(l.supervisors))
+      } else {
+        this.labForm.supervisors = []
+      }
+      if (l.comments !== undefined && l.comments !== '') {
+        this.labForm.comments = JSON.parse(l.comments)
+      } else {
+        this.labForm = []
+      }
+      this.labForm.description = l.description
+    },
+    toCamelCase (underlines) {
+      underlines.forEach((s, i) => {
+        let cs = s
+        cs.isUser = s.is_user
+        cs.accountEmail = s.account_email
+        cs.contactEmail = s.contact_email
+        cs.picUrl = s.pic_url
+        return cs
+      })
+      return underlines
     }
   },
   mounted: function () {
