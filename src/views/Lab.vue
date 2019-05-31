@@ -179,6 +179,8 @@ export default {
         name: '联系电话', value: this.info.phone
       }, {
         name: '主页', value: this.info.front_page_url
+      }, {
+        name: '联系人邮箱', value: this.info.owner_email
       }]
     },
     supervisors () {
@@ -261,7 +263,8 @@ export default {
     },
 
     toCamelCase (underlines) {
-      underlines.forEach((s, i) => {
+      let cc = underlines
+      cc.forEach((s, i) => {
         let cs = s
         cs.isUser = s.is_user
         cs.accountEmail = s.account_email
@@ -269,7 +272,7 @@ export default {
         cs.picUrl = s.pic_url
         return cs
       })
-      return underlines
+      return cc
     },
     onCancelEditing () {
       this.$confirm('确定取消编辑实验室信息？', '警告', {

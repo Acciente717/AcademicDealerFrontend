@@ -229,7 +229,7 @@ export default {
       })
     },
     handleUserInfoResponse (response) {
-      // console.log(response)
+      console.log(response)
       let statusCode = response.status
       if (statusCode !== 0) {
         this.$message.error(

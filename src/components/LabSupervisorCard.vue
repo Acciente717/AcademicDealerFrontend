@@ -76,19 +76,22 @@ export default {
       if (email !== undefined && email !== '') {
         requestUserInfo(email, response => {
           let bio = response.bio
+          console.log('response')
+          console.log(response)
           this.supervisorInfo.name = bio.real_name
           this.supervisorInfo.school = bio.school
           this.supervisorInfo.department = bio.department
-          this.supervisor.title = bio.title
-          this.supervisor.picUrl = bio.pic_url
-          this.supervisor.contactEmail = email
+          this.supervisorInfo.title = bio.title
+          this.supervisorInfo.picUrl = bio.pic_url
+          this.supervisorInfo.contactEmail = email
           this.supervisorInfo.address = bio.school
           this.supervisorInfo.profile = bio.profile
           if (this.supervisorInfo.pic_url === '') {
-            this.userInfo.pic_url = require('@/assets/img/default-user-icon.png')
+            this.supervisorInfo.pic_url = require('@/assets/img/default-user-icon.png')
           }
         })
       }
+      console.log(this.supervisorInfo)
     },
     goToUserPage () {
       this.$router.push('/user/' + this.supervisorInfo.accountEmail)

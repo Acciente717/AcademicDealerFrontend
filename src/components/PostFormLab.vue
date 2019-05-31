@@ -258,7 +258,7 @@ export default {
         }
       }
       // console.log(this.labForm.supervisors)
-      // console.log(request)
+      console.log(request)
       axios
         .post(this.$store.state.serverUrl + '/lab/create/',
           request, {

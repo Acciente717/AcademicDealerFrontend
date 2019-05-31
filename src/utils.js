@@ -114,8 +114,9 @@ function requestLabInfo (labId, callback) {
       }
     })
     .then(response => {
-      console.log(response)
+      // console.log(response)
       if (response.data.content.data) {
+        response.data.content.data.owner_email = response.data.content.data.owner
         callback(response.data.content.data)
       } else {
         console.log('Error sending project info request: ', request)
