@@ -73,6 +73,7 @@
 </style>
 
 <script>
+import { requestLabInfo } from '@/utils.js'
 import CommentArea from '@/components/CommentArea.vue'
 import LabSupervisorCard from '@/components/LabSupervisorCard.vue'
 import PostFormLab from '@/components/PostFormLab.vue'
@@ -148,14 +149,12 @@ export default {
   }),
 
   mounted: function () {
-    // TODO: load the true lab with id
-    this.info = this.testLab
-    this.isLoading = false
+    // this.info = this.testLab
+    this.handleLabInfoChange()
   },
   watch: {
     $route (to, from) {
-      // react to route changes...
-      this.labId = this.$route.params.labId
+      this.handleLabInfoChange()
     }
   },
   computed: {
@@ -191,9 +190,19 @@ export default {
     }
   },
   methods: {
-    editPage () {
-      // TODO: authentication
-      this.$router.push({ name: 'labedit', params: { labId: this.labId } })
+    handleLabInfoChange () {
+      this.isLoading = true
+      requestLabInfo(this.labId, response => {
+        console.log(response)
+        if (response.status === 0) {
+          this.info = response
+        } else {
+          this.$message.error(
+            'Request Lab Info Error: Status ' + response.status
+          )
+        }
+      })
+      this.isLoading = false
     },
     onEditPage () {
       this.isEditing = true

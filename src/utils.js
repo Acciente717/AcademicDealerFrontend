@@ -91,6 +91,38 @@ function requestUserInfo (userEmail, callback, options) {
     })
 }
 
+function requestLabInfo (labId, callback) {
+  let request = {
+    dir: 'request',
+    signature: {
+      is_user: true,
+      user_email: store.state.userEmail,
+      password_hash: store.state.passwordHash
+    },
+    content_type: 'lab',
+    content: {
+      action: 'view',
+      data: {
+        id: labId
+      }
+    }
+  }
+  axios
+    .post(store.state.serverUrl + '/lab/view/', request, {
+      headers: {
+        'Content-Type': 'text/plain'
+      }
+    })
+    .then(response => {
+      console.log(response)
+      if (response.data.content.data) {
+        callback(response.data.content.data)
+      } else {
+        console.log('Error sending project info request: ', request)
+      }
+    })
+}
+
 function requestProjectInfo (projectId, callback) {
   let request = {
     dir: 'request',
@@ -188,4 +220,4 @@ function dateToYMDHMS (date) {
   )
 }
 
-export { requestUserInfo, requestProjectInfo, requestSeminarInfo, dateToYMD, dateToYMDHMS }
+export { requestUserInfo, requestLabInfo, requestProjectInfo, requestSeminarInfo, dateToYMD, dateToYMDHMS }

@@ -216,7 +216,7 @@ export default {
     },
     sendLabRequest () {
       if (!this.$store.state.loggedIn) {
-        this.$message.error('没有登录却尝试发布信息？！')
+        this.$message.error('没有登录却尝试修改信息？！')
         return
       }
       let request = {
@@ -228,19 +228,19 @@ export default {
         },
         content_type: 'lab',
         content: {
-          action: 'create',
+          action: this.isEditing ? 'edit' : 'create',
           data: {
-            id: -1,
+            id: this.labForm.id,
             name: this.labForm.name,
             school: this.labForm.school,
             department: this.labForm.department,
-            owner_email: '',
+            owner_email: this.isEditing ? this.$store.state.userEmail : '',
             address: this.labForm.address,
             phone: this.labForm.phone,
             front_page_url: this.labForm.frontPageUrl,
             pic_url: this.labForm.picUrl,
             logo_url: this.labForm.logoUrl,
-            supervisors: this.labForm.supervisors.map((s) => ({
+            supervisors: JSON.stringify(this.labForm.supervisors.map((s) => ({
               name: s.name,
               school: s.school,
               department: s.department,
@@ -251,8 +251,8 @@ export default {
               contact_email: s.contactEmail,
               address: s.address,
               profile: s.profile
-            })),
-            comments: [],
+            }))),
+            comments: JSON.stringify([]),
             description: this.labForm.description
           }
         }
