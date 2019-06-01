@@ -57,11 +57,6 @@ export default new Router({
       component: () => import('./views/Lab.vue')
     },
     {
-      path: '/labedit/:labId',
-      name: 'labedit',
-      component: () => import('./views/LabEdit.vue')
-    },
-    {
       path: '/project/:projectId',
       name: 'project',
       component: () => import('./views/Project.vue')

@@ -111,7 +111,7 @@ export default {
           curr_page: this.currPage - 1 // 本次请求的页面号
         }
       }
-      // console.log(request);
+      console.log(request)
       axios
         .post(this.$store.state.serverUrl + '/search/', request, {
           headers: {
@@ -119,7 +119,7 @@ export default {
           }
         })
         .then(response => {
-          // console.log(response);
+          console.log(response)
           if (response.data.status === 0) {
             that.totalResults = response.data.content.total_results
             that.lastPage = response.data.content.last_page + 1
