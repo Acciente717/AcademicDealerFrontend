@@ -198,6 +198,22 @@ function dateToYMD (date) {
 }
 
 /*
+ * return string of time in HH:MM:SS style
+ */
+function timeToHMS (time) {
+  var h = time.getHours()
+  var m = time.getMinutes()
+  var s = time.getSeconds()
+  return '' + (h <= 9 ? '0' + h : h) + ':' + (m <= 9 ? '0' + m : m) + ':' + (s <= 9 ? '0' + s : s)
+}
+/*
+ * return full time
+ */
+function timeToString (time) {
+  return dateToYMD(time) + ' ' + timeToHMS(time)
+}
+
+/* 
  * return YYYY-MM-DD HH:MM:SS style date string
  */
 function dateToYMDHMS (date) {
@@ -221,4 +237,4 @@ function dateToYMDHMS (date) {
   )
 }
 
-export { requestUserInfo, requestLabInfo, requestProjectInfo, requestSeminarInfo, dateToYMD, dateToYMDHMS }
+export { requestUserInfo, requestLabInfo, requestProjectInfo, requestSeminarInfo, dateToYMD, dateToYMDHMS, timeToString }

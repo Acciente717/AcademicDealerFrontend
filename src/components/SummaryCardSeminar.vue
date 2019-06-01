@@ -86,7 +86,7 @@
 
 <script>
 import UserIconWithPopup from '@/components/UserIconWithPopup.vue'
-import { requestSeminarInfo, dateToYMD } from '@/utils.js'
+import { requestSeminarInfo, timeToString } from '@/utils.js'
 
 export default {
   props: ['id'],
@@ -113,7 +113,7 @@ export default {
     dateRange () {
       let begin = new Date(this.info.start_date)
       let end = new Date(this.info.end_date)
-      return dateToYMD(begin) + ' - ' + dateToYMD(end)
+      return timeToString(begin) + ' - ' + timeToString(end)
     }
   },
   mounted: function () {

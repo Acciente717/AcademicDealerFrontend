@@ -59,7 +59,7 @@
           <el-form-item label="日期" prop="date">
             <el-date-picker
               v-model="info.date"
-              type="daterange"
+              type="datetimerange"
               align="right"
               unlink-panels
               range-separator="至"
@@ -91,7 +91,7 @@
 </style>
 
 <script>
-import { requestSeminarInfo, dateToYMD } from '@/utils.js'
+import { requestSeminarInfo, timeToString } from '@/utils.js'
 import UserIconWithPopup from '@/components/UserIconWithPopup.vue'
 import MarkdownEditor from 'vue-simplemde/src/markdown-editor'
 import axios from 'axios'
@@ -191,7 +191,7 @@ export default {
     dateRange () {
       let begin = new Date(this.info.start_date.replace(/\s/, 'T'))
       let end = new Date(this.info.end_date.replace(/\s/, 'T'))
-      return dateToYMD(begin) + ' - ' + dateToYMD(end)
+      return timeToString(begin) + ' - ' + timeToString(end)
     }
   },
   watch: {
@@ -205,8 +205,8 @@ export default {
   methods: {
     handleDateSelect () {
       if (this.info.date) {
-        this.info.start_date = dateToYMD(this.info.date[0])
-        this.info.end_date = dateToYMD(this.info.date[1])
+        this.info.start_date = timeToString(this.info.date[0])
+        this.info.end_date = timeToString(this.info.date[1])
       } else {
         this.info.start_date = ''
         this.info.end_date = ''
