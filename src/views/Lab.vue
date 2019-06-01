@@ -151,10 +151,12 @@ export default {
   mounted: function () {
     // this.info = this.testLab
     this.handleLabInfoChange()
+    this.isEditing = false
   },
   watch: {
     $route (to, from) {
       this.handleLabInfoChange()
+      this.isEditing = false
     }
   },
   computed: {

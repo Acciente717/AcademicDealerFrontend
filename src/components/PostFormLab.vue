@@ -292,7 +292,11 @@ export default {
       } else {
         let labId = response.data.content.data.id
         this.$message.info(currentAction + '实验室信息成功！')
-        this.$router.push('/lab/' + labId)
+        if (this.isEditing) {
+          this.$router.go(0)
+        } else {
+          this.$router.push('/lab/' + labId)
+        }
       }
     },
     bindOrigin (l) {
