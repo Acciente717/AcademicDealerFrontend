@@ -7,7 +7,9 @@
       <el-main>
         <span v-if="supervisorInfo.title!==''">{{this.supervisorInfo.title + ' '}}</span>
         <span style="font-size: large">{{this.supervisorInfo.name}}</span>
-        <el-button v-if="supervisorInfo.isUser" size="mini" @click="goToUserPage" type="text">个人资料</el-button>
+        <el-container>
+          <el-button v-if="supervisor.isUser" size="mini" @click="goToUserPage" type="text">个人资料</el-button>
+        </el-container>
       </el-main>
     </el-container>
     <el-form size="medium">
@@ -54,6 +56,8 @@ export default {
     }
   }),
   mounted: function () {
+    console.log('got supervisor')
+    console.log(this.supervisor)
     if (this.supervisor.isUser) {
       this.requestInfo()
     } else {
@@ -95,14 +99,12 @@ export default {
       console.log(this.supervisorInfo)
     },
     goToUserPage () {
-      this.$router.push('/user/' + this.supervisorInfo.accountEmail)
+      this.$router.push('/user/' + this.supervisor.accountEmail)
     },
     loadInfo () {
       // supervisor is not user
       // directly bind from property supervisor
       this.supervisorInfo = this.supervisor
-      console.log('got supervisor')
-      console.log(this.supervisor)
     }
   },
   computed: {
