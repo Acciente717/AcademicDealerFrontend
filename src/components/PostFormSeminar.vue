@@ -1,15 +1,15 @@
 <template>
-  <el-form ref="projectForm" :model="info" :rules="rules" label-width="120px" status-icon>
-    <el-form-item label="项目名称" prop="name">
+  <el-form ref="seminarForm" :model="info" :rules="rules" label-width="120px" status-icon>
+    <el-form-item label="研讨会名称" prop="name">
       <el-input v-model="info.name"></el-input>
     </el-form-item>
-    <el-form-item label="需要人数" prop="member_total_need">
-      <el-input-number v-model="info.member_total_need" :min="1" :max="10"></el-input-number>
+    <el-form-item label="需要人数" prop="member_number_limit">
+      <el-input-number v-model="info.member_number_limit" :min="1" :max="10"></el-input-number>
     </el-form-item>
     <el-form-item label="日期" prop="date">
       <el-date-picker
         v-model="info.date"
-        type="daterange"
+        type="datetimerange"
         align="right"
         unlink-panels
         range-separator="至"
@@ -18,8 +18,8 @@
         @change="handleDateSelect"
       ></el-date-picker>
     </el-form-item>
-    <el-divider content-position="center">项目描述支持Markdown格式</el-divider>
-    <el-form-item label="项目描述" prop="description">
+    <el-divider content-position="center">研讨会描述支持Markdown格式</el-divider>
+    <el-form-item label="研讨会描述" prop="description">
       <markdown-editor v-model="info.description" :configs="markdownConfigs" ref="markdownEditor"></markdown-editor>
     </el-form-item>
     <el-form-item>
@@ -34,7 +34,7 @@
 </style>
 
 <script>
-import { requestProjectInfo, dateToYMD } from '@/utils.js'
+import { requestSeminarInfo, timeToString } from '@/utils.js'
 import axios from 'axios'
 import MarkdownEditor from 'vue-simplemde/src/markdown-editor'
 
@@ -51,14 +51,14 @@ export default {
       owner: '',
       start_date: '',
       end_date: '',
-      member_total_need: 1,
+      member_number_limit: 1,
       description: '',
       current_members: '',
       date: ['', '']
     },
     rules: {
       name: [
-        { required: true, message: '输入项目名称', trigger: 'change' },
+        { required: true, message: '输入研讨会名称', trigger: 'change' },
         {
           min: 1,
           max: 100,
@@ -66,7 +66,7 @@ export default {
           trigger: 'change'
         }
       ],
-      member_total_need: [
+      member_number_limit: [
         { required: true, message: '请选择人数', trigger: 'change' }
       ],
       date: [{ required: true, message: '请选择日期', trigger: 'change' }]
@@ -94,8 +94,8 @@ export default {
   }),
   mounted: function () {
     if (this.id !== undefined) {
-      // Request project info from remote
-      requestProjectInfo(this.id, response => {
+      // Request seminar info from remote
+      requestSeminarInfo(this.id, response => {
         if (response.status === 0) {
           this.info = response
           this.info.date = ['', '']
@@ -103,7 +103,7 @@ export default {
           this.current_members = [this.owner]
         } else {
           this.$message.error(
-            '请求项目信息错误：错误代码' + response.status + '，请联系开发人员'
+            '请求研讨会信息错误：错误代码' + response.status + '，请联系开发人员'
           )
         }
       })
@@ -111,9 +111,11 @@ export default {
   },
   methods: {
     handleDateSelect () {
+      console.log(this.info.date[0])
       if (this.info.date) {
-        this.info.start_date = dateToYMD(this.info.date[0])
-        this.info.end_date = dateToYMD(this.info.date[1])
+        this.info.start_date = timeToString(this.info.date[0])
+        // console.log(this.info.start_date)
+        this.info.end_date = timeToString(this.info.date[1])
       } else {
         this.info.start_date = ''
         this.info.end_date = ''
@@ -121,15 +123,15 @@ export default {
     },
     onSubmit () {
       // validate
-      this.$refs['projectForm'].validate(valid => {
+      this.$refs['seminarForm'].validate(valid => {
         if (valid) {
-          this.$confirm('确定提交项目信息？', '提示', {
+          this.$confirm('确定提交研讨会信息？', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'info'
           })
             .then(() => {
-              this.sendProjectRequest()
+              this.sendSeminarRequest()
             })
             .catch(() => {
               return false
@@ -142,21 +144,21 @@ export default {
     },
     onReset () {
       let that = this
-      this.$confirm('确定清空项目信息？', '警告', {
+      this.$confirm('确定清空研讨会信息？', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
           that.info.name = ''
-          that.info.member_total_need = 1
+          that.info.member_number_limit = 1
           that.info.start_date = ''
           that.info.end_date = ''
           that.info.date = ['', '']
         })
         .catch(() => {})
     },
-    sendProjectRequest () {
+    sendSeminarRequest () {
       let request = {
         dir: 'request',
         signature: {
@@ -164,33 +166,34 @@ export default {
           user_email: this.$store.state.userEmail,
           password_hash: this.$store.state.passwordHash
         },
-        content_type: 'project',
+        content_type: 'seminar',
         content: {
           action: 'create',
           data: {
             name: this.info.name,
             start_date: this.info.start_date,
             end_date: this.info.end_date,
-            member_total_need: this.info.member_total_need,
+            member_number_limit: this.info.member_number_limit,
             description: this.info.description
           }
         }
       }
-      // console.log(request)
+      console.log(request)
       axios
-        .post(this.$store.state.serverUrl + '/project/create/', request, {
+        .post(this.$store.state.serverUrl + '/seminar/create/', request, {
           headers: {
             'Content-Type': 'text/plain'
           }
         })
         .then(response => {
+          console.log(response)
           let status = response.data.content.data.status
           if (status === 0) {
-            let projectId = response.data.content.data.id
-            this.$message('发布项目信息成功！')
-            this.$router.push('/project/' + projectId)
+            let seminarId = response.data.content.data.id
+            this.$message('发布研讨会信息成功！')
+            this.$router.push('/seminar/' + seminarId)
           } else {
-            this.$message.error('Project Create Response: Status ' + status)
+            this.$message.error('Seminar Create Response: Status ' + status)
           }
         })
     }

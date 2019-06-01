@@ -91,6 +91,39 @@ function requestUserInfo (userEmail, callback, options) {
     })
 }
 
+function requestLabInfo (labId, callback) {
+  let request = {
+    dir: 'request',
+    signature: {
+      is_user: true,
+      user_email: store.state.userEmail,
+      password_hash: store.state.passwordHash
+    },
+    content_type: 'lab',
+    content: {
+      action: 'view',
+      data: {
+        id: labId
+      }
+    }
+  }
+  axios
+    .post(store.state.serverUrl + '/lab/view/', request, {
+      headers: {
+        'Content-Type': 'text/plain'
+      }
+    })
+    .then(response => {
+      // console.log(response)
+      if (response.data.content.data) {
+        response.data.content.data.owner_email = response.data.content.data.owner
+        callback(response.data.content.data)
+      } else {
+        console.log('Error sending project info request: ', request)
+      }
+    })
+}
+
 function requestProjectInfo (projectId, callback) {
   let request = {
     dir: 'request',
@@ -114,6 +147,7 @@ function requestProjectInfo (projectId, callback) {
       }
     })
     .then(response => {
+      console.log(response)
       if (response.data.content.data) {
         callback(response.data.content.data)
       } else {
@@ -130,7 +164,7 @@ function requestSeminarInfo (projectId, callback) {
       user_email: store.state.userEmail,
       password_hash: store.state.passwordHash
     },
-    content_type: 'project',
+    content_type: 'seminar',
     content: {
       action: 'view',
       data: {
@@ -163,4 +197,44 @@ function dateToYMD (date) {
   return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d)
 }
 
-export { requestUserInfo, requestProjectInfo, requestSeminarInfo, dateToYMD }
+/*
+ * return string of time in HH:MM:SS style
+ */
+function timeToHMS (time) {
+  var h = time.getHours()
+  var m = time.getMinutes()
+  var s = time.getSeconds()
+  return '' + (h <= 9 ? '0' + h : h) + ':' + (m <= 9 ? '0' + m : m) + ':' + (s <= 9 ? '0' + s : s)
+}
+/*
+ * return full time
+ */
+function timeToString (time) {
+  return dateToYMD(time) + ' ' + timeToHMS(time)
+}
+
+/* 
+ * return YYYY-MM-DD HH:MM:SS style date string
+ */
+function dateToYMDHMS (date) {
+  var d = date.getDate()
+  var m = date.getMonth() + 1 // Month from 0 to 11
+  var y = date.getFullYear()
+  var h = date.getHours()
+  var min = date.getMinutes()
+  var s = date.getSeconds()
+  return (
+    '' +
+    y +
+    '-' +
+    (m <= 9 ? '0' + m : m) +
+    '-' +
+    (d <= 9 ? '0' + d : d) +
+    ' ' +
+    (h <= 9 ? '0' + h : h) +
+    ':' +
+    (min <= 9 ? '0' + min : min) + ':' + (s <= 9 ? '0' + s : s)
+  )
+}
+
+export { requestUserInfo, requestLabInfo, requestProjectInfo, requestSeminarInfo, dateToYMD, dateToYMDHMS, timeToString }

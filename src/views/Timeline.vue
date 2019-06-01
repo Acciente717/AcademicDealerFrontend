@@ -1,8 +1,6 @@
 <template>
   <div class="timeline">
-    <el-card shadow="never">
       <search-result-list/>
-    </el-card>
   </div>
 </template>
 
