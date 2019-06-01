@@ -35,7 +35,7 @@
         </el-table>
       </el-container>
       <el-divider>成员</el-divider>
-      <el-container>
+      <el-container direction="vertical">
         <lab-supervisor-card
           v-for="(s, index)  in toCamelCase(supervisors)"
           :supervisor="s"

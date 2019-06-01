@@ -1,12 +1,12 @@
 <template>
-  <div class="lab-supervisor-card">
+  <div class="lab-supervisor-card" style="margin: 20px">
     <el-container>
       <el-aside style="width: 100px">
         <el-image :src="userPicUrl"/>
       </el-aside>
       <el-main>
-        <span v-if="this.supervisorInfo.title!==''">{{this.supervisorInfo.title + ' '}}</span>
-        <span>{{this.supervisorInfo.name}}</span>
+        <span v-if="supervisorInfo.title!==''">{{this.supervisorInfo.title + ' '}}</span>
+        <span style="font-size: large">{{this.supervisorInfo.name}}</span>
         <el-button v-if="supervisorInfo.isUser" size="mini" @click="goToUserPage" type="text">个人资料</el-button>
       </el-main>
     </el-container>
@@ -78,7 +78,8 @@ export default {
           let bio = response.bio
           console.log('response')
           console.log(response)
-          this.supervisorInfo.name = bio.real_name
+          let name = bio.real_name === '' ? bio.nick_name : bio.real_name
+          this.supervisorInfo.name = name
           this.supervisorInfo.school = bio.school
           this.supervisorInfo.department = bio.department
           this.supervisorInfo.title = bio.title
@@ -100,6 +101,8 @@ export default {
       // supervisor is not user
       // directly bind from property supervisor
       this.supervisorInfo = this.supervisor
+      console.log('got supervisor')
+      console.log(this.supervisor)
     }
   },
   computed: {
