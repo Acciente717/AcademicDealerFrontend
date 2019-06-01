@@ -1,53 +1,124 @@
 <template>
   <div class="summary-card-lab">
     <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <span>这是一条实验室信息</span>
-        <el-button style="float: right; padding: 3px 0" type="text" @click="goToInfoPage">详细信息</el-button>
+      <div class="clearfix">
+        <el-container>
+          <el-aside style="height: 50px; width: 50px;">
+            <user-icon-with-popup :user="info.owner_email"/>
+          </el-aside>
+          <el-main>
+            <div class="card-title">
+              <strong>{{info.name}}</strong>
+              <el-button
+                class="more-info-button"
+                style="float: right; padding: 3px 0; margin: auto;"
+                type="text"
+                @click="goToLabInfoPage"
+              >详细信息</el-button>
+            </div>
+            <div class="card-info">
+              {{info.school}}
+            </div>
+            <div class="card-info">
+              {{info.department}}
+            </div>
+            <div class="card-info">
+              {{info.front_page_url}}
+            </div>
+          </el-main>
+        </el-container>
       </div>
-      <div v-for="o in 4" :key="o" class="text item">{{'List item ' + o }}</div>
-      <el-button text="text" @click="getContent">加载信息</el-button>
-      <div v-if="loading">Now loading</div>
-      <div class="text"> {{ description }}</div>
+      <el-divider class="card-divider"></el-divider>
+      <div class="lab-description">
+        <VueShowdown :markdown="info.description.slice(0, 25) + '...'"/>
+      </div>
     </el-card>
   </div>
 </template>
 
-<script>
+<style scoped>
+.summary-card-lab {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  height: 300px;
+}
+.box-card {
+  height: 300px;
+}
+.card-title {
+  font-size: larger;
+  margin: auto;
+}
+.el-divider {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.el-main {
+  padding: 0px;
+  margin-left: 10px;
+}
+.more-info-button {
+  position: relative;
+  right: 0;
+}
+.card-info {
+  font-size: small;
+  display: flex;
+}
+.small-user-icon {
+  width: 30px;
+  height: 30px;
+}
+.seminar-description {
+  overflow: scroll;
+  height: 180px;
+}
+</style>
 
-import axios from 'axios'
+<script>
+import UserIconWithPopup from '@/components/UserIconWithPopup.vue'
+import { requestLabInfo } from '@/utils.js'
 
 export default {
-  data () {
-    return {
-      loading: false,
-      errored: false,
-      description: 'no description'
+  props: ['id'],
+  components: {
+    UserIconWithPopup
+  },
+  data: () => ({
+    info: {
+      status: 0,
+      id: 1,
+      name: '',
+      owner_email: '',
+      school: '',
+      department: '',
+      front_page_url: '',
+      description: ''
     }
+  }),
+  mounted: function () {
+    this.requestInfo()
   },
   methods: {
-    getContent: function () {
-      this.loading = true
-      axios
-        .get('http://localhost:8001/lab/')
-        .then(res => {
-          console.log(res)
-          this.description = res.data.data.description
-        })
-        .catch(error => {
-          console.log(error)
-          this.errored = true
-        })
-        .finally(() => {
-          this.loading = false
-        })
+    requestInfo () {
+      requestLabInfo(this.id, response => {
+        // console.log(response)
+        switch (response.status) {
+          case 0: // success
+            this.info = response
+            break
+          default:
+            this.$message.error(
+              'SummaryCardLab内部错误：Status ' +
+                response.status +
+                '，请联系开发人员'
+            )
+        }
+      })
     },
-    goToInfoPage () {
-      this.$router.push({ name: 'labinfo', params: { labId: this.labId } })
+    goToLabInfoPage () {
+      this.$router.push('/lab/' + this.id)
     }
   }
 }
 </script>
-
-<style scoped>
-</style>
