@@ -45,7 +45,7 @@
         </div>
         <el-divider>研讨会简介</el-divider>
         <VueShowdown :markdown="info.description"/>
-        <el-divider>讨论区</el-divider>
+        <comment-area type="seminar" :id="seminarId"/>
       </div>
       <div v-if="isEditing">
         <el-divider>编辑研讨会信息</el-divider>
@@ -93,13 +93,15 @@
 <script>
 import { requestSeminarInfo, timeToString } from '@/utils.js'
 import UserIconWithPopup from '@/components/UserIconWithPopup.vue'
+import CommentArea from '@/components/CommentArea.vue'
 import MarkdownEditor from 'vue-simplemde/src/markdown-editor'
 import axios from 'axios'
 
 export default {
   components: {
     UserIconWithPopup,
-    MarkdownEditor
+    MarkdownEditor,
+    CommentArea
   },
   data: () => ({
     info: {
@@ -112,6 +114,7 @@ export default {
       member_number_limit: 1,
       description: '',
       current_members: [],
+      comments: [],
       date: ['', '']
     },
     isEditing: false,
@@ -177,6 +180,8 @@ export default {
       // Condition 4: seminar has not ended
       let now = new Date()
       if (now > new Date(this.info.end_date)) result = false
+      // Condition 5: user is not the poster of seminar
+      if (this.info.owner === this.$store.state.userEmail) result = false
       return result
     },
     isDroppable () {

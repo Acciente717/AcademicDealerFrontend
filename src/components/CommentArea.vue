@@ -71,6 +71,7 @@
 import {
   requestProjectInfo,
   requestSeminarInfo,
+  requestLabInfo,
   dateToYMDHMS
 } from '@/utils.js'
 import axios from 'axios'
@@ -124,7 +125,19 @@ export default {
               this.requestComments()
             } else {
               this.$message.error(
-                'Request Project Info Error: Status ' + response.status
+                'Request Seminar Info Error: Status ' + response.status
+              )
+            }
+          })
+          break
+        case 'lab':
+          requestLabInfo(this.id, response => {
+            if (response.status === 0) {
+              this.commentIds = response.comments
+              this.requestComments()
+            } else {
+              this.$message.error(
+                'Request Lab Info Error: Status ' + response.status
               )
             }
           })
@@ -186,7 +199,7 @@ export default {
         content: {
           action: 'comment_create',
           data: {
-            id: 1,
+            id: this.id,
             description: this.text
           }
         }
