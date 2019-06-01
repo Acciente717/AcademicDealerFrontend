@@ -282,6 +282,7 @@ export default {
           } else {
             this.handleUserInfoChange()
             this.$message.info('个人资料修改成功！')
+            this.activeTab = 'profile'
           }
         })
     },
