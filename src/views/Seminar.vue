@@ -114,6 +114,7 @@ export default {
       member_number_limit: 1,
       description: '',
       current_members: [],
+      comments: [],
       date: ['', '']
     },
     isEditing: false,

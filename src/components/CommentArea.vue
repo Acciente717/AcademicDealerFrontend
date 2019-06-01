@@ -199,7 +199,7 @@ export default {
         content: {
           action: 'comment_create',
           data: {
-            id: 1,
+            id: this.id,
             description: this.text
           }
         }
