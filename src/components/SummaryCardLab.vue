@@ -8,7 +8,7 @@
           </el-aside>
           <el-main>
             <div class="card-title">
-              <strong>{{info.name}}</strong>
+              <strong>{{info.name}}</strong>&nbsp;<el-tag effect="dark" size="small">实验室</el-tag>
               <el-button
                 class="more-info-button"
                 style="float: right; padding: 3px 0; margin: auto;"
@@ -40,10 +40,10 @@
 .summary-card-lab {
   margin-top: 10px;
   margin-bottom: 10px;
-  height: 300px;
+  height: auto;
 }
 .box-card {
-  height: 300px;
+  height: auto;
 }
 .card-title {
   font-size: larger;
@@ -70,8 +70,9 @@
   height: 30px;
 }
 .seminar-description {
-  overflow: scroll;
-  height: 180px;
+  overflow: auto;
+  height: auto;
+  max-height: 180px;
 }
 </style>
 
