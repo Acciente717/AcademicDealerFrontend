@@ -16,8 +16,11 @@
             >编辑研讨会信息</el-button>
           </div>
           <el-form size="mini">
-            <el-form-item style="margin-bottom: 0px" label="需要人数">
+            <el-form-item style="margin-bottom: 0px" label="人数上限">
               <span>{{this.info.member_number_limit}}</span>
+            </el-form-item>
+            <el-form-item style="margin-bottom: 0px" label="空缺位置">
+              <span>{{this.info.member_number_limit - this.info.current_members.length}}</span>
             </el-form-item>
             <el-form-item style="margin-bottom: 0px;" label="起止时间">
               <span>
@@ -53,8 +56,8 @@
           <el-form-item label="研讨会名称" prop="name">
             <el-input v-model="info.name"></el-input>
           </el-form-item>
-          <el-form-item label="需要人数" prop="member_number_limit">
-            <el-input-number v-model="info.member_number_limit" :min="1" :max="10"></el-input-number>
+          <el-form-item label="人数上限" prop="member_number_limit">
+            <el-input-number v-model="info.member_number_limit" :min="1" :max="100"></el-input-number>
           </el-form-item>
           <el-form-item label="日期" prop="date">
             <el-date-picker
@@ -299,8 +302,12 @@ export default {
             this.$message('加入研讨会成功！')
             this.handleSeminarInfoChange()
           } else {
-            this.$message.error('Error in Seminar Join: Status ' + status)
-            console.log(request, response)
+            if (status === 11) {
+              this.$message.error('Unable to join if you are already in.')
+            } else {
+              this.$message.error('Error in Seminar Join: Status ' + status)
+              console.log(request, response)
+            }
           }
         })
     },
