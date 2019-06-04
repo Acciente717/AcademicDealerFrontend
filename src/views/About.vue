@@ -52,7 +52,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
   .el-header {
     background-color: #C0C4CC;
     margin: auto;
