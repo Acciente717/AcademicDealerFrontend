@@ -60,8 +60,8 @@ export default {
     }
   }),
   mounted: function () {
-    console.log('got supervisor')
-    console.log(this.supervisor)
+    // console.log('got supervisor')
+    // console.log(this.supervisor)
     if (this.supervisor.isUser) {
       this.requestInfo()
     } else {

@@ -34,19 +34,25 @@
           </el-table-column>
         </el-table>
       </el-container>
-      <el-divider>成员</el-divider>
-      <el-container direction="vertical">
-        <lab-supervisor-card
-          v-for="(s, index)  in toCamelCase(supervisors)"
-          :supervisor="s"
-          :key="index"/>
+      <el-container>
+        <el-aside>
+          <el-divider>成员</el-divider>
+          <el-container direction="vertical">
+            <lab-supervisor-card
+              v-for="(s, index)  in toCamelCase(supervisors)"
+              :supervisor="s"
+              :key="index"/>
+          </el-container>
+        </el-aside>
+        <el-main style="padding: 0px">
+          <el-divider>简介</el-divider>
+          <el-container>
+            <VueShowdown :markdown="info.description"/>
+          </el-container>
+        </el-main>
       </el-container>
       <el-container>
         <comment-area type="lab" :id="labId"/>
-      </el-container>
-      <el-divider>简介</el-divider>
-      <el-container>
-        <VueShowdown :markdown="info.description"/>
       </el-container>
       <el-container>
         <el-button
@@ -196,7 +202,8 @@ export default {
     handleLabInfoChange () {
       this.isLoading = true
       requestLabInfo(this.labId, response => {
-        console.log(response)
+        // console.log('info change response')
+        // console.log(response)
         if (response.status === 0) {
           this.info = response
         } else {
