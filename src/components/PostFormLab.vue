@@ -253,13 +253,13 @@ export default {
               address: s.address,
               profile: s.profile
             }))),
-            comments: JSON.stringify([]),
+            comments: this.labForm.comments,
             description: this.labForm.description
           }
         }
       }
       // console.log(this.labForm.supervisors)
-      console.log(request)
+      // console.log(request)
       let url = this.isEditing ? 'edit' : 'create'
       axios
         .post(this.$store.state.serverUrl + '/lab/' + url + '/',
@@ -279,7 +279,6 @@ export default {
         })
     },
     handleLabResponce (response) {
-      // console.log(response)
       let currentAction = ''
       if (this.isEditing) {
         currentAction = '编辑'
@@ -292,11 +291,7 @@ export default {
       } else {
         let labId = response.data.content.data.id
         this.$message.info(currentAction + '实验室信息成功！')
-        if (this.isEditing) {
-          this.$router.go(0)
-        } else {
-          this.$router.push('/lab/' + labId)
-        }
+        this.$router.push('/lab/' + labId)
       }
     },
     bindOrigin (l) {
@@ -313,11 +308,7 @@ export default {
       } else {
         this.labForm.supervisors = []
       }
-      if (l.comments !== undefined && l.comments !== '') {
-        this.labForm.comments = JSON.parse(l.comments)
-      } else {
-        this.labForm = []
-      }
+      this.labForm.comments = []
       this.labForm.description = l.description
     },
     toCamelCase (underlines) {
@@ -335,8 +326,8 @@ export default {
   mounted: function () {
     if (this.originLab !== undefined) {
       this.isEditing = true
-      // console.log('originlab')
-      // console.log(this.originLab)
+      console.log('originlab')
+      console.log(this.originLab)
       this.bindOrigin(this.originLab)
     }
   }

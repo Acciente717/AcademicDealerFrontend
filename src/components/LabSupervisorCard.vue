@@ -1,34 +1,38 @@
 <template>
   <div class="lab-supervisor-card" style="margin: 20px">
-    <el-container>
-      <el-aside style="width: 100px">
-        <el-image :src="userPicUrl"/>
-      </el-aside>
-      <el-main>
-        <span v-if="supervisorInfo.title!==''">{{this.supervisorInfo.title + ' '}}</span>
-        <span style="font-size: large">{{this.supervisorInfo.name}}</span>
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
         <el-container>
-          <el-button v-if="supervisor.isUser" size="mini" @click="goToUserPage" type="text">个人资料</el-button>
+          <el-aside style="width: 100px">
+            <el-image :src="userPicUrl"/>
+          </el-aside>
+          <el-main>
+            <span v-if="supervisorInfo.title!==''">{{this.supervisorInfo.title + ' '}}</span>
+            <span style="font-size: large">{{this.supervisorInfo.name}}</span>
+            <el-container>
+              <el-button v-if="supervisor.isUser" size="mini" @click="goToUserPage" type="text">个人资料</el-button>
+            </el-container>
+          </el-main>
         </el-container>
-      </el-main>
-    </el-container>
-    <el-form size="medium">
-      <el-form-item v-if="supervisorInfo.school!==''" style="margin-bottom: 0px" label="学校">
-        <span>{{supervisorInfo.school}}</span>
-      </el-form-item>
-      <el-form-item v-if="supervisorInfo.department!==''" style="margin-bottom: 0px" label="院系">
-        <span>{{supervisorInfo.department}}</span>
-      </el-form-item>
-      <el-form-item v-if="supervisorInfo.address!==''" style="margin-bottom: 0px" label="地址">
-        <span>{{supervisorInfo.address}}</span>
-      </el-form-item>
-      <el-form-item v-if="supervisorInfo.contactEmail!==''" style="margin-bottom: 0px;" label="邮箱">
-        <span>{{supervisorInfo.contactEmail}}</span>
-      </el-form-item>
-      <el-form-item style="margin-bottom: 0px;" label="简介">
-        <VueShowdown :markdown="supervisorInfo.profile"/>
-      </el-form-item>
-    </el-form>
+      </div>
+      <el-form size="medium">
+        <el-form-item v-if="supervisorInfo.school!==''" style="margin-bottom: 0px" label="学校">
+          <span>{{supervisorInfo.school}}</span>
+        </el-form-item>
+        <el-form-item v-if="supervisorInfo.department!==''" style="margin-bottom: 0px" label="院系">
+          <span>{{supervisorInfo.department}}</span>
+        </el-form-item>
+        <el-form-item v-if="supervisorInfo.address!==''" style="margin-bottom: 0px" label="地址">
+          <span>{{supervisorInfo.address}}</span>
+        </el-form-item>
+        <el-form-item v-if="supervisorInfo.contactEmail!==''" style="margin-bottom: 0px;" label="邮箱">
+          <span>{{supervisorInfo.contactEmail}}</span>
+        </el-form-item>
+        <el-form-item style="margin-bottom: 0px;" label="简介">
+          <VueShowdown :markdown="supervisorInfo.profile"/>
+        </el-form-item>
+      </el-form>
+    </el-card>
   </div>
 </template>
 
@@ -56,8 +60,8 @@ export default {
     }
   }),
   mounted: function () {
-    console.log('got supervisor')
-    console.log(this.supervisor)
+    // console.log('got supervisor')
+    // console.log(this.supervisor)
     if (this.supervisor.isUser) {
       this.requestInfo()
     } else {
