@@ -48,6 +48,12 @@
   </div>
 </template>
 
+<style>
+  body {
+    background-image: url(" assets/img/background.jpg ");
+  }
+</style>
+
 <style scoped>
 #app {
   font-family: "Avenir", sans-serif, Helvetica, Arial, sans-serif;
