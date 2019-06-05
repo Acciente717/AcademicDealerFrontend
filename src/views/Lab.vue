@@ -167,8 +167,7 @@ export default {
       return parseInt(this.$route.params.labId)
     },
     isOwner () {
-      // return this.info.owner_email === this.$store.state.userEmail
-      return true
+      return this.info.owner_email === this.$store.state.userEmail
     },
     infoTable () {
       return [{
