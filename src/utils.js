@@ -213,7 +213,7 @@ function timeToString (time) {
   return dateToYMD(time) + ' ' + timeToHMS(time)
 }
 
-/* 
+/*
  * return YYYY-MM-DD HH:MM:SS style date string
  */
 function dateToYMDHMS (date) {

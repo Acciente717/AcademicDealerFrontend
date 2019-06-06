@@ -3,8 +3,8 @@
     <el-form-item label="研讨会名称" prop="name">
       <el-input v-model="info.name"></el-input>
     </el-form-item>
-    <el-form-item label="需要人数" prop="member_number_limit">
-      <el-input-number v-model="info.member_number_limit" :min="1" :max="10"></el-input-number>
+    <el-form-item label="人数上限" prop="member_number_limit">
+      <el-input-number v-model="info.member_number_limit" :min="1" :max="100"></el-input-number>
     </el-form-item>
     <el-form-item label="日期" prop="date">
       <el-date-picker
